@@ -138,7 +138,7 @@ export default StyleSheet.create({
   },
   today_collection: {
     marginHorizontal: PixelRatio.roundToNearestPixel(20),
-    marginBottom: PixelRatio.roundToNearestPixel(10),
+    marginBottom: PixelRatio.roundToNearestPixel(5),
     borderWidth: 1,
     borderColor: allColor.gray,
     borderRadius: PixelRatio.roundToNearestPixel(10)

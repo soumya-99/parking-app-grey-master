@@ -639,9 +639,11 @@ function VehicleInOutStore() {
     return new Promise((resolve, reject) => {
       db.transaction(tx => {
         tx.executeSql(
+          // 'SELECT * FROM vehicleInOutTable',
           'SELECT opratorName, COUNT(*) AS quantity, SUM(paid_amt) AS totalAmount, SUM(advance) AS TotalAdvance FROM vehicleInOutTable WHERE date_time_out IS NOT NULL AND date_time_out >= ? AND date_time_out <= ? GROUP BY opratorName',
           [startDate.toISOString(), endDate.toISOString()],
           (_, resultSet) => {
+            console.log("+================+ OPERATORWISE RECORDDDD +================", resultSet.rows)
             const records = [];
             for (let i = 0; i < resultSet.rows.length; i++) {
               const record = resultSet.rows.item(i);

@@ -673,12 +673,13 @@ const otherStyle = StyleSheet.create({
   print_container: {
     flexDirection: 'row',
     justifyContent: 'center',
+    // margin: -6
   },
   print_action_button: {
-    marginHorizontal: PixelRatio.roundToNearestPixel(10),
+    marginHorizontal: PixelRatio.roundToNearestPixel(5),
   },
   vehicle: {
-    margin: 10,
+    margin: 5,
     borderWidth: 1,
     alignSelf: 'center',
     paddingHorizontal: PixelRatio.roundToNearestPixel(20),
