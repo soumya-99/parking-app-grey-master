@@ -171,14 +171,20 @@ dependencies {
         implementation jscFlavor
     }
 
-    implementation fileTree(dir: 'libs', include: ['*.jar','*.so'])
-    implementation files('libs/android-async-http-1.4.4.jar')
-    implementation files('libs/itext5-itextpdf-5.5.12.jar')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // implementation files('libs/android-async-http-1.4.4.jar')
+    // implementation files('libs/itext5-itextpdf-5.5.12.jar')
     implementation files('libs/bw_pos_sdk_20200122.jar')
 //    implementation files('libs/zxingcore.jar')
-    implementation files('libs/classes.jar')
-    implementation files('libs/odm.jar')
-    implementation files('libs/SmartPos_1.4.0_R210715.jar')
+    compileOnly files('libs/classes.jar')
+    // implementation files('libs/odm.jar')
+    // implementation files('libs/SmartPos_1.4.0_R210715.jar')
+
+    // implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // compileOnly files('libs/classes.jar')
+    // implementation files('libs/bw_pos_sdk_20200122.jar')
+    // implementation files('libs/zxingcore.jar')
+    implementation files('libs/poishadow-all.jar')
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

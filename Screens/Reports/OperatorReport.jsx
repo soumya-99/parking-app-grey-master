@@ -161,22 +161,22 @@ const OperatorReport = ({ navigation }) => {
         }
         // Printing Header uisng ZCS sdk
 
-        MyModules.printHeader(headerPayload, 24, (err, msg) => {
-            if (err) {
-                console.error(err)
-            }
-            console.warn(msg)
-        })
+        // MyModules.printHeader(headerPayload, 24, (err, msg) => {
+        //     if (err) {
+        //         console.error(err)
+        //     }
+        //     console.warn(msg)
+        // })
 
         if (pic) {
             // Printing picture uisng ZCS sdk
             const picData = pic.split('data:image/jpeg;base64,')
-            MyModules.printImage(picData[1], (err, msg) => {
-                if (err) {
-                    console.error(err)
-                }
-                console.log(msg)
-            })
+            // MyModules.printImage(picData[1], (err, msg) => {
+            //     if (err) {
+            //         console.error(err)
+            //     }
+            //     console.log(msg)
+            // })
         }
 
         const imein = user?.imei_no
@@ -205,20 +205,20 @@ const OperatorReport = ({ navigation }) => {
         const mainPayLoad = addSpecialSpaces(payload)
         try {
             // Printing Bill uisng ZCS sdk
-            MyModules.printBill(mainPayLoad, 18, false, (err, msg) => {
-                if (err) {
-                    console.error(err)
-                    return
-                }
-                console.log(msg)
-            })
+            // MyModules.printBill(mainPayLoad, 18, false, (err, msg) => {
+            //     if (err) {
+            //         console.error(err)
+            //         return
+            //     }
+            //     console.log(msg)
+            // })
             // Printing footer uisng ZCS sdk
-            MyModules.printFooter(footerPayload, 20, (err, msg) => {
-                if (err) {
-                    console.error(err)
-                }
-                console.log(msg)
-            })
+            // MyModules.printFooter(footerPayload, 20, (err, msg) => {
+            //     if (err) {
+            //         console.error(err)
+            //     }
+            //     console.log(msg)
+            // })
             setpl(false)
             // await handleStoreOrUploadCarOut();
         } catch (err) {

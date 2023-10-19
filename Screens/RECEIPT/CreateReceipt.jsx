@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   ToastAndroid,
   PermissionsAndroid,
+  NativeModules,
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 
@@ -35,6 +36,12 @@ import gstSettingsController from '../../Hooks/Controller/GST_Settings/gstSettin
 import GstPriceCalculator from '../../Hooks/PriceCalculator/GstPriceCalculator';
 
 const CreateReceipt = ({navigation, route}) => {
+  const {
+    centerAlignedPrintText,
+    leftAlignedPrintText,
+    rightAlignedPrintText,
+    printQRCode,
+  } = NativeModules.MyPrinter;
   // check is Internet available or not
   const isOnline = useContext(InternetStatusContext);
 
@@ -597,59 +604,122 @@ const CreateReceipt = ({navigation, route}) => {
       isUploadedIN: isUploadedIN,
     };
 
+    // try {
+    //   let payload = `[C]<font size='tall'><B>RECEIPT</font>\n`;
+    //   if (pic) {
+    //     payload += `[R]<img>${pic}</img>\n\n` + '\n';
+    //   }
+    //   if (receiptSettings.header1_flag == '1') {
+    //     payload += `[C]<font size='tall'> ${receiptSettings.header1}</font>\n`;
+    //   }
+    //   if (receiptSettings.header2_flag == '1') {
+    //     payload += `[c]${receiptSettings.header2}\n`;
+    //   }
+
+    //   if (receiptSettings.header3_flag == '1') {
+    //     payload += `[C]<font size='tall'> ${receiptSettings.header3}</font>\n`;
+    //   }
+    //   if (receiptSettings.header4_flag == '1') {
+    //     payload += `[c]${receiptSettings.header4}\n`;
+    //   }
+    //   payload +=
+    //     `[C]<B><font size='big'>---------------</font>\n` +
+    //     `[L]<b>RECEIPT NO : ${receiptNo}\n` +
+    //     `[L]<b>VEHICLE TYPE : ${type}\n` +
+    //     `[L]<b>VEHICLE NO : ${vehicleNumber.toUpperCase()}\n` +
+    //     `[L]<b>IN Time : ${formattedDateTime}\n\n` +
+    //     `[R]<qrcode size='35'>${receiptNo}-*-${type}-*-${id}-*-${'S'}-*-${vehicleNumber.toUpperCase()}-*-${
+    //       currentTime.toISOString().slice(0, -5) + 'Z'
+    //     }-*-${dev_mod}-*-${operatorName}-*-${userId}-*-${mc_srl_no}-*-${0}-*-${'Y'}-*-${0}-*-${isUploadedIN}</qrcode>\n\n`;
+
+    //   if (receiptSettings.footer1_flag == '1') {
+    //     payload += `[C] ${receiptSettings.footer1} \n`;
+    //   }
+    //   if (receiptSettings.footer2_flag == '1') {
+    //     payload += `[C]${receiptSettings.footer2} \n`;
+    //   }
+
+    //   if (receiptSettings.footer3_flag == '1') {
+    //     payload += `[C] ${receiptSettings.footer3} \n`;
+    //   }
+    //   if (receiptSettings.footer4_flag == '1') {
+    //     payload += `[C]${receiptSettings.footer4} \n`;
+    //   }
+    //   // await ThermalPrinterModule.printBluetooth({
+    //   //   payload: payload,
+    //   //   printerNbrCharactersPerLine: 30,
+    //   //   printerDpi: 120,
+    //   //   printerWidthMM: 58,
+    //   //   mmFeedPaper: 25,
+    //   // });
+    //   console.log("Car Receipt 1")
+    //   navigation.navigate('bottomNavBAr');
+    // } catch (err) {
+    //   //error handling
+    //   //
+    //   // alert(JSON.stringify(err.message))
+    //   ToastAndroid.show('Print error', ToastAndroid.SHORT);
+    //   console.log(err.message);
+    // }
+
     try {
-      let payload = `[C]<font size='tall'><B>RECEIPT</font>\n`;
-      if (pic) {
-        payload += `[R]<img>${pic}</img>\n\n` + '\n';
-      }
+      let payloadHead = `RECEIPT\n---------------\n`;
+      let payload = '';
+      // if (pic) {
+      //   payload += `[R]<img>${pic}</img>\n\n` + '\n';
+      // }
       if (receiptSettings.header1_flag == '1') {
-        payload += `[C]<font size='tall'> ${receiptSettings.header1}</font>\n`;
+        payloadHead += ` ${receiptSettings.header1}\n`;
       }
       if (receiptSettings.header2_flag == '1') {
-        payload += `[c]${receiptSettings.header2}\n`;
+        payloadHead += `${receiptSettings.header2}\n`;
       }
 
       if (receiptSettings.header3_flag == '1') {
-        payload += `[C]<font size='tall'> ${receiptSettings.header3}</font>\n`;
+        payloadHead += ` ${receiptSettings.header3}\n`;
       }
       if (receiptSettings.header4_flag == '1') {
-        payload += `[c]${receiptSettings.header4}\n`;
+        payloadHead += `${receiptSettings.header4}\n`;
       }
       payload +=
-        `[C]<B><font size='big'>---------------</font>\n` +
-        `[L]<b>RECEIPT NO : ${receiptNo}\n` +
-        `[L]<b>VEHICLE TYPE : ${type}\n` +
-        `[L]<b>VEHICLE NO : ${vehicleNumber.toUpperCase()}\n` +
-        `[L]<b>IN Time : ${formattedDateTime}\n\n` +
-        `[R]<qrcode size='35'>${receiptNo}-*-${type}-*-${id}-*-${'S'}-*-${vehicleNumber.toUpperCase()}-*-${
-          currentTime.toISOString().slice(0, -5) + 'Z'
-        }-*-${dev_mod}-*-${operatorName}-*-${userId}-*-${mc_srl_no}-*-${0}-*-${'Y'}-*-${0}-*-${isUploadedIN}</qrcode>\n\n`;
+        `RECEIPT NO : ${receiptNo}\n` +
+        `VEHICLE TYPE : ${type}\n` +
+        `VEHICLE NO : ${vehicleNumber.toUpperCase()}\n` +
+        `IN Time : ${formattedDateTime}\n\n`;
+      let qrCode = `${receiptNo}-*-${type}-*-${id}-*-${'S'}-*-${vehicleNumber.toUpperCase()}-*-${
+        currentTime.toISOString().slice(0, -5) + 'Z'
+      }-*-${dev_mod}-*-${operatorName}-*-${userId}-*-${mc_srl_no}-*-${0}-*-${'Y'}-*-${0}-*-${isUploadedIN}\n\n\n\n`;
+
+      let payloadFoot = '';
 
       if (receiptSettings.footer1_flag == '1') {
-        payload += `[C] ${receiptSettings.footer1} \n`;
+        payloadFoot += ` ${receiptSettings.footer1} \n`;
       }
       if (receiptSettings.footer2_flag == '1') {
-        payload += `[C]${receiptSettings.footer2} \n`;
+        payloadFoot += `${receiptSettings.footer2} \n`;
       }
 
       if (receiptSettings.footer3_flag == '1') {
-        payload += `[C] ${receiptSettings.footer3} \n`;
+        payloadFoot += `${receiptSettings.footer3} \n`;
       }
       if (receiptSettings.footer4_flag == '1') {
-        payload += `[C]${receiptSettings.footer4} \n`;
+        payloadFoot += `${receiptSettings.footer4} \n\n\n`;
       }
-      await ThermalPrinterModule.printBluetooth({
-        payload: payload,
-        printerNbrCharactersPerLine: 30,
-        printerDpi: 120,
-        printerWidthMM: 58,
-        mmFeedPaper: 25,
-      });
+      // await ThermalPrinterModule.printBluetooth({
+      //   payload: payload,
+      //   printerNbrCharactersPerLine: 30,
+      //   printerDpi: 120,
+      //   printerWidthMM: 58,
+      //   mmFeedPaper: 25,
+      // });
+      centerAlignedPrintText(payloadHead, 36);
+      leftAlignedPrintText(payload, 24);
+      printQRCode(qrCode);
+      centerAlignedPrintText(payloadFoot, 36);
+
+      console.log('Car Receipt 1');
       navigation.navigate('bottomNavBAr');
     } catch (err) {
-      //error handling
-      //
-      // alert(JSON.stringify(err.message))
       ToastAndroid.show('Print error', ToastAndroid.SHORT);
       console.log(err.message);
     }
@@ -664,58 +734,117 @@ const CreateReceipt = ({navigation, route}) => {
     sgst,
     base_amt,
   ) => {
-    // const result = await getVehicleRatesByVehicleId(id);
-    try {
-      let payload = `[C]<font size='tall'><B>RECEIPT</font>\n`;
+    const result = await getVehicleRatesByVehicleId(id);
+    // try {
+    //   let payload = `[C]<font size='tall'><B>RECEIPT</font>\n`;
 
-      if (pic) {
-        payload += `[R]<img>${pic}</img>\n\n` + '\n';
-      }
+    //   if (pic) {
+    //     payload += `[R]<img>${pic}</img>\n\n` + '\n';
+    //   }
+    //   if (receiptSettings.header1_flag == '1') {
+    //     payload += `[C]<font size='tall'> ${receiptSettings.header1}</font>\n`;
+    //   }
+    //   if (receiptSettings.header2_flag == '1') {
+    //     payload += `[c]${receiptSettings.header2}\n`;
+    //   }
+    //   payload +=
+    //     `[C]<B><font size='big'>---------------</font>\n` +
+    //     `[L]<b>RECEIPT NO : ${receiptNo}\n` +
+    //     `[L]<b>VEHICLE TYPE : ${type}\n` +
+    //     `[L]<b>VEHICLE NO : ${vehicleNumber.toUpperCase()}\n` +
+    //     `[L]<b>IN Time : ${formattedDateTime}\n`;
+
+    //   if (isGst == 'Y') {
+    //     payload +=
+    //       `[L]<b>BASE AMOUNT : ${base_amt}\n` +
+    //       `[L]<b>CGST : ${cgst}\n` +
+    //       `[L]<b>SGST : ${sgst}\n` +
+    //       `[L]<b>PARKING FEES : ${totalPrice}\n\n`;
+    //   }
+
+    //   if (isGst == 'N') {
+    //     payload += `[L]<b>PARKING FEES : ${totalPrice}\n\n`;
+    //   }
+
+    //   if (receiptSettings.footer1_flag == '1') {
+    //     payload += `[C] ${receiptSettings.footer1} \n`;
+    //   }
+
+    //   if (receiptSettings.footer2_flag == '1') {
+    //     payload += `[C]${receiptSettings.footer2} \n`;
+    //   }
+
+    //   // await ThermalPrinterModule.printBluetooth({
+    //   //   payload: payload,
+    //   //   printerNbrCharactersPerLine: 30,
+    //   //   printerDpi: 120,
+    //   //   printerWidthMM: 58,
+    //   //   mmFeedPaper: 25,
+    //   // });
+    //   console.log("OutpassUI 2")
+    //   navigation.navigate('bottomNavBAr');
+    // } catch (err) {
+    //   //error handling
+    //   //
+    //   // alert(JSON.stringify(err.message))
+    //   ToastAndroid.show('Print error', ToastAndroid.SHORT);
+    //   console.log(err.message);
+    // }
+
+    try {
+      let payloadHead = `RECEIPT\n---------------\n`;
+      let payload = '';
+
+      // if (pic) {
+      //   payload += `[R]<img>${pic}</img>\n\n` + '\n';
+      // }
       if (receiptSettings.header1_flag == '1') {
-        payload += `[C]<font size='tall'> ${receiptSettings.header1}</font>\n`;
+        payload += `${receiptSettings.header1}\n`;
       }
       if (receiptSettings.header2_flag == '1') {
-        payload += `[c]${receiptSettings.header2}\n`;
+        payload += `${receiptSettings.header2}\n`;
       }
       payload +=
-        `[C]<B><font size='big'>---------------</font>\n` +
-        `[L]<b>RECEIPT NO : ${receiptNo}\n` +
-        `[L]<b>VEHICLE TYPE : ${type}\n` +
-        `[L]<b>VEHICLE NO : ${vehicleNumber.toUpperCase()}\n` +
-        `[L]<b>IN Time : ${formattedDateTime}\n`;
+        `RECEIPT NO : ${receiptNo}\n` +
+        `VEHICLE TYPE : ${type}\n` +
+        `VEHICLE NO : ${vehicleNumber.toUpperCase()}\n` +
+        `IN Time : ${formattedDateTime}\n\n\n`;
 
       if (isGst == 'Y') {
         payload +=
-          `[L]<b>BASE AMOUNT : ${base_amt}\n` +
-          `[L]<b>CGST : ${cgst}\n` +
-          `[L]<b>SGST : ${sgst}\n` +
-          `[L]<b>PARKING FEES : ${totalPrice}\n\n`;
+          `BASE AMOUNT : ${base_amt}\n` +
+          `CGST : ${cgst}\n` +
+          `SGST : ${sgst}\n` +
+          `PARKING FEES : ${totalPrice}\n\n\n`;
       }
 
       if (isGst == 'N') {
-        payload += `[L]<b>PARKING FEES : ${totalPrice}\n\n`;
+        payload += `PARKING FEES : ${totalPrice}\n\n`;
       }
 
+      let payloadFoot = '';
       if (receiptSettings.footer1_flag == '1') {
-        payload += `[C] ${receiptSettings.footer1} \n`;
+        payloadFoot += ` ${receiptSettings.footer1} \n`;
       }
 
       if (receiptSettings.footer2_flag == '1') {
-        payload += `[C]${receiptSettings.footer2} \n`;
+        payloadFoot += `${receiptSettings.footer2} \n\n\n`;
       }
 
-      await ThermalPrinterModule.printBluetooth({
-        payload: payload,
-        printerNbrCharactersPerLine: 30,
-        printerDpi: 120,
-        printerWidthMM: 58,
-        mmFeedPaper: 25,
-      });
+      // await ThermalPrinterModule.printBluetooth({
+      //   payload: payload,
+      //   printerNbrCharactersPerLine: 30,
+      //   printerDpi: 120,
+      //   printerWidthMM: 58,
+      //   mmFeedPaper: 25,
+      // });
+      centerAlignedPrintText(payloadHead, 36);
+      leftAlignedPrintText(payload, 24);
+      centerAlignedPrintText(payloadFoot, 36);
+
+      console.log('OutpassUI 2');
       navigation.navigate('bottomNavBAr');
     } catch (err) {
-      //error handling
-      //
-      // alert(JSON.stringify(err.message))
       ToastAndroid.show('Print error', ToastAndroid.SHORT);
       console.log(err.message);
     }
@@ -729,57 +858,59 @@ const CreateReceipt = ({navigation, route}) => {
     isUploadedIN,
   ) => {
     try {
-      let payload = `[C]<font size='tall'><B>RECEIPT</font>\n`
-      if (pic) {
-        payload += `[R]<img>${pic}</img>\n\n` + '\n'
-      }
+      let payloadHead = `RECEIPT\n---------------\n`;
+      let payload = ""
+      // if (pic) {
+      //   payload += `[R]<img>${pic}</img>\n\n` + '\n';
+      // }
       if (receiptSettings.header1_flag == '1') {
-        payload += `[C]<font size='tall'> ${receiptSettings.header1}</font>\n`
+        payload += ` ${receiptSettings.header1}</font>\n`;
       }
       if (receiptSettings.header2_flag == '1') {
-        payload += `[c]${receiptSettings.header2}\n`
+        payload += `${receiptSettings.header2}\n`;
       }
       if (receiptSettings.header3_flag == '1') {
-        payload += `[c]${receiptSettings.header3}\n`
+        payload += `${receiptSettings.header3}\n`;
       }
       if (receiptSettings.header4_flag == '1') {
-        payload += `[c]${receiptSettings.header4}\n`
+        payload += `${receiptSettings.header4}\n`;
       }
 
       payload +=
-        `[C]<B><font size='big'>---------------</font>\n` +
-        `[L]<b>RECEIPT NO : ${receiptNo}\n` +
-        `[L]<b>VEHICLE TYPE : ${type}\n` +
-        `[L]<b>VEHICLE NO : ${vehicleNumber.toUpperCase()}\n` +
-        `[L]<b>ADVANCE : ${advance}\n` +
-        `[L]<b>IN Time : ${formattedDateTime}\n\n` +
-        `[R]<qrcode size='35'>${receiptNo}-*-${type}-*-${id}-*-${'S'}-*-${vehicleNumber.toUpperCase()}-*-${
+        `RECEIPT NO : ${receiptNo}\n` +
+        `VEHICLE TYPE : ${type}\n` +
+        `VEHICLE NO : ${vehicleNumber.toUpperCase()}\n` +
+        `ADVANCE : ${advance}\n` +
+        `IN Time : ${formattedDateTime}\n\n`
+        let qrCode = 
+        `${receiptNo}-*-${type}-*-${id}-*-${'S'}-*-${vehicleNumber.toUpperCase()}-*-${
           currentTime.toISOString().slice(0, -5) + 'Z'
-        }-*-${'A'}-*-${operatorName}-*-${userId}-*-${mc_srl_no}-*-${0}-*-${'Y'}-*-${advance}-*-${isUploadedIN}-*-${adv_pay}</qrcode>\n\n`
+        }-*-${'A'}-*-${operatorName}-*-${userId}-*-${mc_srl_no}-*-${0}-*-${'Y'}-*-${advance}-*-${isUploadedIN}-*-${adv_pay}</qrcode>\n\n\n\n`;
+
+        let payloadFoot = ""
+
 
       if (receiptSettings.footer1_flag == '1') {
-        payload += `[C] ${receiptSettings.footer1} \n`
+        payloadFoot += ` ${receiptSettings.footer1} \n`;
       }
 
       if (receiptSettings.footer2_flag == '1') {
-        payload += `[C]${receiptSettings.footer2} \n`
+        payloadFoot += `${receiptSettings.footer2} \n`;
       }
 
       if (receiptSettings.footer3_flag == '1') {
-        payload += `[C] ${receiptSettings.footer3} \n`
+        payloadFoot += ` ${receiptSettings.footer3} \n`;
       }
 
       if (receiptSettings.footer4_flag == '1') {
-        payload += `[C]${receiptSettings.footer4} \n`
+        payloadFoot += `${receiptSettings.footer4} \n\n\n`;
       }
-      await ThermalPrinterModule.printBluetooth({
-        payload: payload,
 
-        printerNbrCharactersPerLine: 30,
-        printerDpi: 120,
-        printerWidthMM: 58,
-        mmFeedPaper: 25,
-      });
+      centerAlignedPrintText(payloadHead, 36)
+      leftAlignedPrintText(payload, 24)
+      centerAlignedPrintText(payloadFoot, 36)
+      
+      console.log('OutpassUI 3');
       navigation.navigate('bottomNavBAr');
     } catch (err) {
       //error handling

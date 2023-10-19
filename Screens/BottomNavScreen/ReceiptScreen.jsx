@@ -51,7 +51,8 @@ import fixedPriceStorage from '../../Hooks/Sql/FixedPriceStore/fixedPriceStorage
 import dummyData from './dummy_in_data.json';
 import uploadVehicleData from '../../Hooks/Controller/vechicles/uploadVehicleData';
 const ReceiptScreen = ({navigation}) => {
-  const MyNativeModule = NativeModules.MyPrinter;
+  const {centerAlignedPrintText, leftAlignedPrintText, rightAlignedPrintText} =
+    NativeModules.MyPrinter;
 
   const isOnline = useContext(InternetStatusContext);
   const isFoccused = useIsFocused();
@@ -71,7 +72,7 @@ const ReceiptScreen = ({navigation}) => {
     getAllOutVehicles,
     updateIsUploadedINById,
     updateIsUploadedOUTById,
-    calculateStatistics
+    calculateStatistics,
   } = VehicleInOutStore();
   const {getAdvancePricesByVehicleId} = advancePriceStorage();
   const {getFixedPricesByVehicleId} = fixedPriceStorage();
@@ -92,40 +93,62 @@ const ReceiptScreen = ({navigation}) => {
 
   // const { ding } = playSound()
   const [isBlueToothEnable, setIsBlueToothEnable] = useState(false);
-  async function checkBluetoothEnabled() {
+  async function checkPermissions() {
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Bluetooth Permission',
-          message:
-            'This app needs access to your location to check Bluetooth status.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        // Permission granted, check Bluetooth status
-        BleManager.enableBluetooth()
-          .then(() => {
-            // Success code
-            setIsBlueToothEnable(true);
-            console.log('The bluetooth is already enabled or the user confirm');
-          })
-          .catch(error => {
-            // Failure code
-            console.log('The user refuse to enable bluetooth');
-          });
-        // const isEnabled = await BluetoothStatus.isEnabled();
-        // console.log('Bluetooth Enabled:', isEnabled);
-      } else {
-        console.log('Bluetooth permission denied');
+      if (Platform.OS === 'android') {
+        await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          'com.pos.permission.SECURITY',
+          'com.pos.permission.ACCESSORY_DATETIME',
+          'com.pos.permission.ACCESSORY_LED',
+          'com.pos.permission.ACCESSORY_BEEP',
+          'com.pos.permission.ACCESSORY_RFREGISTER',
+          'com.pos.permission.CARD_READER_ICC',
+          'com.pos.permission.CARD_READER_PICC',
+          'com.pos.permission.CARD_READER_MAG',
+          'com.pos.permission.COMMUNICATION',
+          'com.pos.permission.PRINTER',
+          'com.pos.permission.ACCESSORY_RFREGISTER',
+          'com.pos.permission.EMVCORE',
+        ]).then(result => {
+          if (
+            result['android.permission.ACCESS_COARSE_LOCATION'] &&
+            result['android.permission.ACCESS_FINE_LOCATION'] &&
+            result['android.permission.READ_EXTERNAL_STORAGE'] &&
+            result['android.permission.WRITE_EXTERNAL_STORAGE'] === 'granted'
+          ) {
+            BleManager.enableBluetooth()
+              .then(() => {
+                setIsBlueToothEnable(true);
+                console.log(
+                  'The bluetooth is already enabled or the user confirm',
+                );
+              })
+              .catch(error => {
+                console.log('The user refuse to enable bluetooth', error);
+              });
+          } else if (
+            result['android.permission.ACCESS_COARSE_LOCATION'] ||
+            result['android.permission.ACCESS_FINE_LOCATION'] ||
+            result['android.permission.READ_EXTERNAL_STORAGE'] ||
+            result['android.permission.WRITE_EXTERNAL_STORAGE'] ===
+              'never_ask_again'
+          ) {
+            console.log('The user refuse to enable some permission.');
+          }
+        });
       }
     } catch (error) {
       console.log('Error checking Bluetooth status:', error);
     }
   }
+
+  useEffect(() => {
+    checkPermissions();
+  }, []);
 
   // {"carin": 3, "carout": 3, "totalCollection": "170.00"}
   const todayCollectionArray = [
@@ -136,7 +159,7 @@ const ReceiptScreen = ({navigation}) => {
   ];
 
   const handlePlay = async () => {
-    await checkBluetoothEnabled();
+    await checkPermissions();
 
     if (!isBlueToothEnable) {
       ToastAndroid.show(
@@ -146,25 +169,42 @@ const ReceiptScreen = ({navigation}) => {
       return;
     }
 
+    // try {
+    //   // await ThermalPrinterModule.printBluetooth({
+    //   //   payload:
+    //   //     `[C]<u><font size='tall'>${userDetails?.companyname.toUpperCase()}</font></u>\n` +
+    //   //     '[c]-----------------------\n' +
+    //   //     `[L]<font size='normal'>NAME : ${userDetails?.name.toUpperCase()}</font>\n` +
+    //   //     `[L]<font size='normal'>PHONE No. : ${userDetails?.user_id}</font>\n` +
+    //   //     `[L]<font size='normal'>LOCATION : ${userDetails?.location}</font>\n` +
+    //   //     `[L]<font size='normal'>SERIAL No. : ${userDetails?.imei_no}</font>`,
+    //   //   printerNbrCharactersPerLine: 30,
+    //   //   printerDpi: 120,
+    //   //   printerWidthMM: 58,
+    //   //   mmFeedPaper: 25,
+    //   // });
+    //   console.log("RcptSS 1")
+    // } catch (err) {
+    //   //error handling
+    //   //
+    //   ToastAndroid.show('hello error', ToastAndroid.SHORT);
+    //   console.log(err.message);
+    // }
     try {
-      await ThermalPrinterModule.printBluetooth({
-        payload:
-          `[C]<u><font size='tall'>${userDetails?.companyname.toUpperCase()}</font></u>\n` +
-          '[c]-----------------------\n' +
-          `[L]<font size='normal'>NAME : ${userDetails?.name.toUpperCase()}</font>\n` +
-          `[L]<font size='normal'>PHONE No. : ${userDetails?.user_id}</font>\n` +
-          `[L]<font size='normal'>LOCATION : ${userDetails?.location}</font>\n` +
-          `[L]<font size='normal'>SERIAL No. : ${userDetails?.imei_no}</font>`,
-        printerNbrCharactersPerLine: 30,
-        printerDpi: 120,
-        printerWidthMM: 58,
-        mmFeedPaper: 25,
-      });
-    } catch (err) {
-      //error handling
-      //
-      ToastAndroid.show('hello error', ToastAndroid.SHORT);
-      console.log(err.message);
+      centerAlignedPrintText(
+        `${userDetails?.companyname.toUpperCase()}\n` +
+          '---------------------\n',
+        36,
+      );
+      leftAlignedPrintText(
+        `NAME : ${userDetails?.name.toUpperCase()}\n` +
+          `PHONE No. : ${userDetails?.user_id}\n` +
+          `LOCATION : ${userDetails?.location}\n` +
+          `SERIAL No. : ${userDetails?.imei_no}\n\n\n`,
+        24,
+      );
+    } catch (error) {
+      console.log('React Try-Catch Err', error);
     }
   };
 
@@ -189,7 +229,6 @@ const ReceiptScreen = ({navigation}) => {
   }
 
   const uploadDataToTheServer = async () => {
-
     if (isOnline) {
       await uploadAllVehiclesData();
     }
@@ -309,7 +348,7 @@ const ReceiptScreen = ({navigation}) => {
   const handleSamplePrintReceipt = async () => {
     // const result = await getVehicleRatesByVehicleId(id);
     //  checkBluetoothEnabled()
-    await checkBluetoothEnabled();
+    await checkPermissions();
 
     if (!isBlueToothEnable) {
       ToastAndroid.show(
@@ -319,13 +358,14 @@ const ReceiptScreen = ({navigation}) => {
       return;
     }
     try {
-      await ThermalPrinterModule.printBluetooth({
-        payload: `[C]`,
-        printerNbrCharactersPerLine: 30,
-        printerDpi: 120,
-        printerWidthMM: 58,
-        mmFeedPaper: 25,
-      });
+      // await ThermalPrinterModule.printBluetooth({
+      //   payload: `[C]`,
+      //   printerNbrCharactersPerLine: 30,
+      //   printerDpi: 120,
+      //   printerWidthMM: 58,
+      //   mmFeedPaper: 25,
+      // });
+      console.log('RcptSS 2');
     } catch (err) {
       //error handling
       //
@@ -420,14 +460,14 @@ const ReceiptScreen = ({navigation}) => {
   useEffect(() => {
     if (isFoccused) {
       // totalAmount": 0, "vehicleInCount": 30169, "vehicleOutCount":
-      calculateStatistics() .then(res => {
-       console.log("-----------------------------------------------",res)
-       setTotalAmount(Math.round(res.totalAmount * 100) / 100);
-       setTotalVehicleIn(res.vehicleInCount)
-       setTotalVehicleOut(res.vehicleOutCount)
-
-      })
-      .catch(err => console.error(err));
+      calculateStatistics()
+        .then(res => {
+          console.log('-----------------------------------------------', res);
+          setTotalAmount(Math.round(res.totalAmount * 100) / 100);
+          setTotalVehicleIn(res.vehicleInCount);
+          setTotalVehicleOut(res.vehicleOutCount);
+        })
+        .catch(err => console.error(err));
 
       // calculateTotalAmount()
       //   .then(res => {
@@ -442,7 +482,6 @@ const ReceiptScreen = ({navigation}) => {
       //   .catch(err => console.error(err));
     }
   }, [isFoccused]);
-
 
   // reinitiate the current time and date
   useEffect(() => {
@@ -507,29 +546,27 @@ const ReceiptScreen = ({navigation}) => {
     });
   };
 
-  const {createVehicleInOut,amit} = VehicleInOutStore();
+  const {createVehicleInOut, amit} = VehicleInOutStore();
   const [dummyDataLoadig, setDummyDataLoding] = useState(false);
   function delay(milliseconds) {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
   }
   const generateDummyData = async () => {
-
     //  amit().then(res=>console.log("---------------**********amit**********---------",res)).catch(err=>{
     //   console.log("---------------**********amit**********---------",err)
     // })
-    
+
     if (dummyDataLoadig) {
       return;
     }
-    
+
     setDummyDataLoding(true);
     // return
-   
+
     // for (let i = 0 ; i<dummyData.length;i++) {
 
-   
     //   // await delay(300)
-  
+
     //   await createVehicleInOut(
     //     i+1,
     //     dummyData[i].type,
@@ -549,10 +586,7 @@ const ReceiptScreen = ({navigation}) => {
     // }
 
     setDummyDataLoding(false);
-    
   };
-
-
 
   return (
     <View style={{flex: 1}}>
@@ -610,7 +644,7 @@ const ReceiptScreen = ({navigation}) => {
           {icons.print}
         </TouchableOpacity>
       </View>
-{/* 
+      {/* 
       <View>
         {dummyDataLoadig && (
           <Text style={{fontWeight: '700', color: 'red', fontSize: 20}}>

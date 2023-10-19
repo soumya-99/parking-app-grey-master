@@ -11,18 +11,19 @@ const PrintUi = ({route,navigation}) => {
 //  [{"label": "RECEIPT NO.", "value": 13}, {"label": "VEHICLE TYPE", "value": "Car"}, {"label": "VEHICLE N0.", "value": "kyjyjyk"}, {"label": "IN TM", "value": "23/6/2023 - 5:01:29 PM"}]
  const handlePrintReceipt = async () => {
   try {
-    await ThermalPrinterModule.printBluetooth({
-      payload: `[C]<B>RECEIPT\n`+
-      `[L]<b>RECEIPT NO : ${data[0].value}\n`+
-      `[L]<b>VEHICLE TYPE : ${data[1].value}\n`+
-      `[L]<b>VEHICLE NO : ${data[2].value}\n`+
-      `[L]<b>IN Time : ${data[3].value}\n`+
-      `[R]<qrcode size='30'>${data[0].value}/${data[1].value}/${data[2].value}/${data[3].value}</qrcode>\n`,
-      printerNbrCharactersPerLine: 30,
-      printerDpi:120,
-      printerWidthMM:58,
-      mmFeedPaper:25
-    });
+    // await ThermalPrinterModule.printBluetooth({
+    //   payload: `[C]<B>RECEIPT\n`+
+    //   `[L]<b>RECEIPT NO : ${data[0].value}\n`+
+    //   `[L]<b>VEHICLE TYPE : ${data[1].value}\n`+
+    //   `[L]<b>VEHICLE NO : ${data[2].value}\n`+
+    //   `[L]<b>IN Time : ${data[3].value}\n`+
+    //   `[R]<qrcode size='30'>${data[0].value}/${data[1].value}/${data[2].value}/${data[3].value}</qrcode>\n`,
+    //   printerNbrCharactersPerLine: 30,
+    //   printerDpi:120,
+    //   printerWidthMM:58,
+    //   mmFeedPaper:25
+    // });
+    console.log("PrintUI 1")
     navigation.navigate("bottomNavBAr")
   } catch (err) {
     //error handling

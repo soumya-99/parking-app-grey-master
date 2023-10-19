@@ -3,6 +3,7 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  PermissionsAndroid
 } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 
@@ -17,12 +18,15 @@ import HeaderLogoComponent from '../../component/HeaderLogoComponent';
 
 import { AuthContext } from '../../Auth/AuthProvider';
 import DeviceInfo from 'react-native-device-info';
+import BleManager from 'react-native-ble-manager';
 
 const SignInScreen = ({ navigation }) => {
   const [text, onChangeText] = useState('');
   const [password, onChangePassword] = useState('');
   const [deviceId, SetDeviceId] = useState('')
   const { login } = useContext(AuthContext);
+
+  const [isBlueToothEnable, setIsBlueToothEnable] = useState(false);
 
   console.log(text, password);
 
@@ -31,6 +35,63 @@ const SignInScreen = ({ navigation }) => {
    const deviceId = DeviceInfo.getUniqueIdSync()
    SetDeviceId(deviceId)
   },[])
+
+  async function checkPermissions() {
+    try {
+      if (Platform.OS === 'android') {
+        await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          'com.pos.permission.SECURITY',
+          'com.pos.permission.ACCESSORY_DATETIME',
+          'com.pos.permission.ACCESSORY_LED',
+          'com.pos.permission.ACCESSORY_BEEP',
+          'com.pos.permission.ACCESSORY_RFREGISTER',
+          'com.pos.permission.CARD_READER_ICC',
+          'com.pos.permission.CARD_READER_PICC',
+          'com.pos.permission.CARD_READER_MAG',
+          'com.pos.permission.COMMUNICATION',
+          'com.pos.permission.PRINTER',
+          'com.pos.permission.ACCESSORY_RFREGISTER',
+          'com.pos.permission.EMVCORE',
+        ]).then(result => {
+          if (
+            result['android.permission.ACCESS_COARSE_LOCATION'] &&
+            result['android.permission.ACCESS_FINE_LOCATION'] &&
+            result['android.permission.READ_EXTERNAL_STORAGE'] &&
+            result['android.permission.WRITE_EXTERNAL_STORAGE'] === 'granted'
+          ) {
+            BleManager.enableBluetooth()
+              .then(() => {
+                setIsBlueToothEnable(true);
+                console.log(
+                  'The bluetooth is already enabled or the user confirm',
+                );
+              })
+              .catch(error => {
+                console.log('The user refuse to enable bluetooth', error);
+              });
+          } else if (
+            result['android.permission.ACCESS_COARSE_LOCATION'] ||
+            result['android.permission.ACCESS_FINE_LOCATION'] ||
+            result['android.permission.READ_EXTERNAL_STORAGE'] ||
+            result['android.permission.WRITE_EXTERNAL_STORAGE'] ===
+              'never_ask_again'
+          ) {
+            console.log('The user refuse to enable some permission.');
+          }
+        });
+      }
+    } catch (error) {
+      console.log('Error checking Bluetooth status:', error);
+    }
+  }
+
+  useEffect(() => {
+    checkPermissions()
+  }, [])
 
   // const {createUser}=getDBconnection()
   // createUser ("pritam",'123')
