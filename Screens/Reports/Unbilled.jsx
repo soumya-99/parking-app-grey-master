@@ -30,8 +30,11 @@ const data = [
 ];
 const width = Dimensions.get("screen").width
 const Unbilled = ({ navigation }) => {
+
+    const {centerAlignedPrintText, leftAlignedPrintText, rightAlignedPrintText} =
+    NativeModules.MyPrinter;
     // NativeModules.MyPrinter is a reference to a native module named MyPrinter.  
-    const MyModules = NativeModules.MyPrinter;
+    // const MyModules = NativeModules.MyPrinter;
     const { retrieveAuthUser } = getAuthUser()
     const { getUserByToken } = storeUsers()
 
@@ -168,40 +171,41 @@ const Unbilled = ({ navigation }) => {
         //     }
         //     console.warn(msg)
         // })
+        centerAlignedPrintText(headerPayload, 36)
 
-        if (pic) {
-            // Printing picture uisng ZCS sdk
-            const picData = pic.split('data:image/jpeg;base64,')
-            // MyModules.printImage(picData[1], (err, msg) => {
-            //     if (err) {
-            //         console.error(err)
-            //     }
-            //     console.log(msg)
-            // })
-        }
+        // if (pic) {
+        //     // Printing picture uisng ZCS sdk
+        //     const picData = pic.split('data:image/jpeg;base64,')
+        //     // MyModules.printImage(picData[1], (err, msg) => {
+        //     //     if (err) {
+        //     //         console.error(err)
+        //     //     }
+        //     //     console.log(msg)
+        //     // })
+        // }
 
         const imein = user?.imei_no
-        let payload = "-----------------------------------------------------------------------\n"
+        let payload = "---------------------------\n"
         payload += `DT: ${date.toLocaleDateString("en-GB")} TM: ${date.toLocaleTimeString(undefined, options)}\n`
         payload += `FROM: ${mydateFrom.toLocaleDateString("en-GB")}  TO: ${mydateTo.toLocaleDateString("en-GB")}\n`
         payload += `MC.ID: ${imein} \n`
-        payload += "--------------------------------------------------------------------------\n"
-        payload += "Receipt     Veh.no          Date         Time\n "
-        payload += "--------------------------------------------------------------------\n"
+        payload += "---------------------------\n"
+        payload += "Rcpt.  Veh.no   Date   Time\n "
+        payload += "---------------------------\n"
         payload += extractedData
-        payload += "-----------------------------------------------------------\n"
+        payload += "---------------------------\n"
         payload += `TOTAL       ${unbilledData.length} \n  `
 
         let footerPayload = ""
         if (receiptSettings.footer1_flag == "1") {
-            footerPayload += `${receiptSettings.footer1} \n`
+            footerPayload += `${receiptSettings.footer1} \n\n`
         }
 
         if (receiptSettings.footer2_flag == "1") {
-            footerPayload += `${receiptSettings.footer2} \n\n\n\n`
+            footerPayload += `${receiptSettings.footer2} \n\n`
         }
 
-        const mainPayLoad = addSpecialSpaces(payload)
+        // const mainPayLoad = addSpecialSpaces(payload)
         // console.log(mainPayLoad)
         try {
             // Printing Bill uisng ZCS sdk
@@ -219,6 +223,8 @@ const Unbilled = ({ navigation }) => {
             //     }
             //     console.log(msg)
             // })
+            centerAlignedPrintText(payload, 26)
+            centerAlignedPrintText(footerPayload, 36)
             setpl(false)
             // await handleStoreOrUploadCarOut();
         } catch (err) {
