@@ -152,13 +152,13 @@ const Unbilled = ({ navigation }) => {
 
         const extractedData = unbilledData && unbilledData.map(({ receiptNo, date_time_in, vehicle_no }) => {
             const formatTime = new Date(date_time_in)
-            return `${receiptNo.toString()}  ${vehicle_no.toString()}  ${formatTime.toLocaleDateString("en-GB")}  ${formatTime.toLocaleTimeString(undefined, options)} \n `
+            return `${receiptNo.toString().padEnd(5)}  ${vehicle_no.toString().slice(0, 4).padEnd(6)}  ${formatTime.toLocaleTimeString(undefined, options)} \n `
 
                         // `${receiptNo.toString().padEnd(14)}${vehicle_no.toString().padEnd(12)}${formatTime.toLocaleDateString("en-GB")}${" ".padEnd(5)}${formatTime.toLocaleTimeString(undefined, options)}\n`
         }).join('')
         setpl(true)
 
-        let headerPayload = 'UNBILLED RECEIPT\n'
+        let headerPayload = 'UNBILLED REPORTS'
         if (receiptSettings.header1_flag == "1") {
             headerPayload += `${receiptSettings.header1}\n`
         }
@@ -192,7 +192,7 @@ const Unbilled = ({ navigation }) => {
         payload += `FROM: ${mydateFrom.toLocaleDateString("en-GB")}  TO: ${mydateTo.toLocaleDateString("en-GB")}\n`
         payload += `MC.ID: ${imein} \n`
         payload += "---------------------------\n"
-        payload += "Rcpt.  Veh.no   Date   Time\n "
+        payload += "Rcpt.    Veh.no     Time\n "
         payload += "---------------------------\n"
         payload += extractedData
         payload += "---------------------------\n"

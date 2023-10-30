@@ -663,7 +663,7 @@ const CreateReceipt = ({navigation, route}) => {
     // }
 
     try {
-      let payloadHead = `RECEIPT\n---------------\n`;
+      let payloadHead = `RECEIPT\n---------------`;
       let payload = '';
       // if (pic) {
       //   payload += `[R]<img>${pic}</img>\n\n` + '\n';
@@ -685,10 +685,10 @@ const CreateReceipt = ({navigation, route}) => {
         `RECEIPT NO : ${receiptNo}\n` +
         `VEHICLE TYPE : ${type}\n` +
         `VEHICLE NO : ${vehicleNumber.toUpperCase()}\n` +
-        `IN Time : ${formattedDateTime}\n\n`;
+        `IN Time : ${formattedDateTime}\n`;
       let qrCode = `${receiptNo}-*-${type}-*-${id}-*-${'S'}-*-${vehicleNumber.toUpperCase()}-*-${
         currentTime.toISOString().slice(0, -5) + 'Z'
-      }-*-${dev_mod}-*-${operatorName}-*-${userId}-*-${mc_srl_no}-*-${0}-*-${'Y'}-*-${0}-*-${isUploadedIN}\n\n\n\n\n`;
+      }-*-${dev_mod}-*-${operatorName}-*-${userId}-*-${mc_srl_no}-*-${0}-*-${'Y'}-*-${0}-*-${isUploadedIN}\n`;
 
       let payloadFoot = '';
 

@@ -264,7 +264,7 @@ const OutpassPrintUI = ({route, navigation}) => {
       // payload variable holds all the texts.
       // Which will be printed.
       let payload = '';
-      let payloadHead = `OUTPASS\n---------------\n`;
+      let payloadHead = `OUTPASS\n---------------`;
 
       // if (pic) {
       //   payload += `[R]<img>${pic}</img>\n\n` + '\n'

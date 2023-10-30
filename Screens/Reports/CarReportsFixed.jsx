@@ -181,7 +181,7 @@ const CarReportsFixed = ({navigation}) => {
         }),
       );
     setpl(true);
-    let headerPayload = 'VEHICLE WISE REOPRT\n';
+    let headerPayload = 'VEHICLE WISE REOPRT';
     if (receiptSettings.header1_flag == '1') {
       headerPayload += `${receiptSettings.header1}\n`;
     }
@@ -229,7 +229,7 @@ const CarReportsFixed = ({navigation}) => {
         // const TotalAdvanceLen = TotalAdvance.toString().length
         // payload += `${vehicleType.toString().padEnd(12 - vehicleTypeLen)}${quantity.toString().padEnd(10 - quantityLen)}${TotalAdvance.toString().padEnd(10 - TotalAdvanceLen)}${totalAmount}\n`;
 
-        payload += `${vehicleType.toString()}      ${quantity.toString()}      ${TotalAdvance.toString()}     ${totalAmount} \n `
+        payload += `${vehicleType.toString().slice(0, 5)}      ${quantity.toString()}      ${TotalAdvance.toString()}     ${totalAmount} \n `
     });
     payload +=
       '--------------------------------\n';

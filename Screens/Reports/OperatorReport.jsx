@@ -151,12 +151,12 @@ const OperatorReport = ({ navigation }) => {
 
         const extractedData = unbilledData && unbilledData.map(({ opratorName, quantity, TotalAdvance, totalAmount }) => {
             // opratorName, quantity, TotalAdvance, totalAmount
-            return `${opratorName.toString()}      ${quantity.toString()}      ${TotalAdvance.toString()}     ${totalAmount} \n `
+            return `${opratorName.toString().slice(0, 5)}      ${quantity.toString()}      ${TotalAdvance.toString()}     ${totalAmount} \n `
             // return `${opratorName?.toString().padEnd(19)}${quantity.toString().padEnd(9)}${TotalAdvance.toString().padEnd(12)}${totalAmount}\n`
         }).join('');
         // console.log("object ", extractedData)
         setpl(true)
-        let headerPayload = 'OPERATOR RECEIPT\n'
+        let headerPayload = 'OPERATOR REPORT'
         if (receiptSettings.header1_flag == "1") {
             headerPayload += `${receiptSettings.header1}\n`
         }

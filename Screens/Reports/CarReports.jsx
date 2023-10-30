@@ -152,7 +152,7 @@ const CarReports = ({ navigation }) => {
             vehicleType, quantity, TotalAdvance, totalAmount
         }));
         setpl(true)
-        let headerPayload = 'VEHICLES RECEIPT\n'
+        let headerPayload = 'VEHICLES REPORT'
         if (receiptSettings.header1_flag == "1") {
             headerPayload += `${receiptSettings.header1}\n`
         }
@@ -168,16 +168,16 @@ const CarReports = ({ navigation }) => {
         //     console.warn(msg)
         // })
 
-        if (pic) {
-            const picData = pic.split('data:image/jpeg;base64,')
-            // Printing picture uisng ZCS sdk
-            // MyModules.printImage(picData[1], (err, msg) => {
-            //     if (err) {
-            //         console.error(err)
-            //     }
-            //     console.log(msg)
-            // })
-        }
+        // if (pic) {
+        //     const picData = pic.split('data:image/jpeg;base64,')
+        //     // Printing picture uisng ZCS sdk
+        //     // MyModules.printImage(picData[1], (err, msg) => {
+        //     //     if (err) {
+        //     //         console.error(err)
+        //     //     }
+        //     //     console.log(msg)
+        //     // })
+        // }
 
         const imein = user?.imei_no
         let payload = "--------------------------------\n"
@@ -193,7 +193,7 @@ const CarReports = ({ navigation }) => {
             // const TotalAdvanceLen = TotalAdvance.toString().length
             // payload += `${vehicleType.toString().padEnd(18 - vehicleTypeLen)}${quantity.toString().padEnd(15 - quantityLen)}${TotalAdvance.toString().padEnd(16 - TotalAdvanceLen)}${totalAmount}\n`;
 
-            payload += `${vehicleType.toString()}      ${quantity.toString()}      ${TotalAdvance.toString()}     ${totalAmount} \n `
+            payload += `${vehicleType.toString().slice(0, 5)}      ${quantity.toString()}      ${TotalAdvance.toString()}     ${totalAmount} \n `
         });
         payload += "--------------------------------\n"
         payload += `TOTAL      ${totalQTY}      ${totalAdvance}     ${totalPrice.toString()} \n `
