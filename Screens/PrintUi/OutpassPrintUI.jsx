@@ -287,7 +287,7 @@ const OutpassPrintUI = ({route, navigation}) => {
       }
 
       if (receiptSettings.footer2_flag == '1') {
-        payloadFoot += ` ${receiptSettings.footer2} \n\n\n`;
+        payloadFoot += ` ${receiptSettings.footer2} \n`;
       }
       // this function start the printing process.
       // this is an external package.
@@ -300,7 +300,8 @@ const OutpassPrintUI = ({route, navigation}) => {
       // });
       centerAlignedPrintText(payloadHead, 36);
       leftAlignedPrintText(payload, 24);
-      centerAlignedPrintText(payloadFoot, 36);
+      centerAlignedPrintText(payloadFoot, 24);
+      centerAlignedPrintText("\n", 24);
       console.log('OutpassUI 1');
 
       // await handleStoreOrUploadCarOut();
@@ -352,10 +353,10 @@ const OutpassPrintUI = ({route, navigation}) => {
       //   payload += `[R]<img>${pic}</img>\n\n` + '\n'
       // }
       if (receiptSettings.header1_flag == '1') {
-        payload += ` ${receiptSettings.header1}\n`;
+        payloadHead += ` ${receiptSettings.header1}\n`;
       }
       if (receiptSettings.header2_flag == '1') {
-        payload += `${receiptSettings.header2}\n`;
+        payloadHead += `${receiptSettings.header2}\n`;
       }
 
       payload += `---------------\n`;
@@ -364,11 +365,11 @@ const OutpassPrintUI = ({route, navigation}) => {
       });
 
       if (receiptSettings.footer1_flag == '1') {
-        payload += ` ${receiptSettings.footer1} \n`;
+        payloadFoot += ` ${receiptSettings.footer1} \n\n\n`;
       }
 
       if (receiptSettings.footer2_flag == '1') {
-        payload += `${receiptSettings.footer2} \n\n\n`;
+        payloadFoot += `${receiptSettings.footer2} \n\n\n`;
       }
       // this function start the printing
       // this is an external package
@@ -383,7 +384,7 @@ const OutpassPrintUI = ({route, navigation}) => {
       // });
       centerAlignedPrintText(payloadHead, 36);
       leftAlignedPrintText(payload, 24);
-      centerAlignedPrintText(payloadFoot, 36);
+      centerAlignedPrintText(payloadFoot, 24);
       console.log('OutpassUI 2');
 
       // await handleStoreOrUploadCarOut();

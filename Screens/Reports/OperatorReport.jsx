@@ -19,7 +19,10 @@ const width = Dimensions.get("screen").width
 
 const OperatorReport = ({ navigation }) => {
     // NativeModules.MyPrinter is a reference to a native module named MyPrinter.  
-    const MyModules = NativeModules.MyPrinter;
+    // const MyModules = NativeModules.MyPrinter;
+    const {centerAlignedPrintText, leftAlignedPrintText, rightAlignedPrintText} =
+    NativeModules.MyPrinter;
+
     const { retrieveAuthUser } = getAuthUser()
     const { getUserByToken } = storeUsers()
     const [isBlueToothEnable, setIsBlueToothEnable] = useState(false)
@@ -181,25 +184,25 @@ const OperatorReport = ({ navigation }) => {
 
         const imein = user?.imei_no
 
-        let payload = "-----------------------------------------------------------------------\n"
+        let payload = "--------------------------------\n"
         payload += `DT: ${date.toLocaleDateString("en-GB")} TM: ${date.toLocaleTimeString(undefined, options)}\n`
         payload += `FROM: ${mydateFrom.toLocaleDateString("en-GB")}  TO: ${mydateTo.toLocaleDateString("en-GB")}\n`
         payload += `MC.ID: ${imein} \n`
-        payload += "--------------------------------------------------------------------------\n"
-        payload += "Operator          Qty       Advance       Amount\n "
-        payload += "--------------------------------------------------------------------\n"
+        payload += "--------------------------------\n"
+        payload += "Operator  Qty  Advance  Amount\n "
+        payload += "--------------------------------\n"
 
         payload += extractedData
-        payload += `${"TOTAL".padEnd(16)}    ${totalQTY.toString().padEnd(8)} ${totalAdvance.toString().padEnd(11)} ${totalPrice.toString()} \n  `
+        payload += `${"TOTAL".padEnd(16)}     ${totalQTY.toString().padEnd(8)} ${totalAdvance.toString().padEnd(11)} ${totalPrice.toString()} \n`
 
         let footerPayload = ""
         if (receiptSettings.footer1_flag == "1") {
-            footerPayload += `${receiptSettings.footer1} \n`
+            footerPayload += `${receiptSettings.footer1} \n\n\n`
         }
 
 
         if (receiptSettings.footer2_flag == "1") {
-            footerPayload += `${receiptSettings.footer2} \n\n\n\n`
+            footerPayload += `${receiptSettings.footer2} \n\n\n`
         }
 
         const mainPayLoad = addSpecialSpaces(payload)
@@ -219,6 +222,9 @@ const OperatorReport = ({ navigation }) => {
             //     }
             //     console.log(msg)
             // })
+            centerAlignedPrintText(headerPayload, 36)
+            centerAlignedPrintText(payload, 24)
+            centerAlignedPrintText(footerPayload, 24)
             setpl(false)
             // await handleStoreOrUploadCarOut();
         } catch (err) {

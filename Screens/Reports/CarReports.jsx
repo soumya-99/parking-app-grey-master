@@ -20,7 +20,10 @@ import storeUsers from '../../Hooks/Sql/User/storeuser';
 
 const CarReports = ({ navigation }) => {
     // NativeModules.MyPrinter is a reference to a native module named MyPrinter.   
-    const MyModules = NativeModules.MyPrinter;
+    // const MyModules = NativeModules.MyPrinter;
+    const {centerAlignedPrintText, leftAlignedPrintText, rightAlignedPrintText} =
+    NativeModules.MyPrinter;
+
     const { retrieveAuthUser } = getAuthUser()
     const { getUserByToken } = storeUsers()
     const [isBlueToothEnable, setIsBlueToothEnable] = useState(false)
@@ -177,29 +180,29 @@ const CarReports = ({ navigation }) => {
         }
 
         const imein = user?.imei_no
-        let payload = "-----------------------------------------------------------------------\n"
+        let payload = "--------------------------------\n"
         payload += `DT: ${date.toLocaleDateString("en-GB")} TM: ${date.toLocaleTimeString(undefined, options)}\n`
         payload += `FROM: ${mydateFrom.toLocaleDateString("en-GB")}  TO: ${mydateTo.toLocaleDateString("en-GB")}\n`
         payload += `MC.ID: ${imein} \n`
-        payload += "--------------------------------------------------------------------------\n"
+        payload += "--------------------------------\n"
         payload += "Operator     Qty         Advance      Amount\n "
-        payload += "--------------------------------------------------------------------\n"
+        payload += "--------------------------------\n"
         extractedData.forEach(({ vehicleType, quantity, TotalAdvance, totalAmount }) => {
             const quantityLen = quantity.toString().length
             const vehicleTypeLen = vehicleType.toString().length
             const TotalAdvanceLen = TotalAdvance.toString().length
             payload += `${vehicleType.toString().padEnd(18 - vehicleTypeLen)}${quantity.toString().padEnd(15 - quantityLen)}${TotalAdvance.toString().padEnd(16 - TotalAdvanceLen)}${totalAmount}\n`;
         });
-        payload += "--------------------------------------------------------------------\n"
+        payload += "--------------------------------\n"
         payload += `TOTAL ${"".padEnd(5)}    ${totalQTY}${"".toString().padEnd(9)} ${totalAdvance.toString().padEnd(13)} ${totalPrice.toString()} \n  `
 
         let footerPayload = ""
         if (receiptSettings.footer1_flag == "1") {
-            footerPayload += `${receiptSettings.footer1} \n`
+            footerPayload += `${receiptSettings.footer1} \n\n\n`
         }
 
         if (receiptSettings.footer2_flag == "1") {
-            footerPayload += `${receiptSettings.footer2} \n\n\n\n`
+            footerPayload += `${receiptSettings.footer2} \n\n\n`
         }
 
         const mainPayLoad = addSpecialSpaces(payload)
@@ -222,6 +225,9 @@ const CarReports = ({ navigation }) => {
             //     }
             //     console.log(msg)
             // })
+            centerAlignedPrintText(headerPayload, 36)
+            leftAlignedPrintText(payload, 24)
+            centerAlignedPrintText(footerPayload, 24)
             setpl(false)
             // await handleStoreOrUploadCarOut();
         } catch (err) {

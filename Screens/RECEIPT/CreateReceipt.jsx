@@ -688,7 +688,7 @@ const CreateReceipt = ({navigation, route}) => {
         `IN Time : ${formattedDateTime}\n\n`;
       let qrCode = `${receiptNo}-*-${type}-*-${id}-*-${'S'}-*-${vehicleNumber.toUpperCase()}-*-${
         currentTime.toISOString().slice(0, -5) + 'Z'
-      }-*-${dev_mod}-*-${operatorName}-*-${userId}-*-${mc_srl_no}-*-${0}-*-${'Y'}-*-${0}-*-${isUploadedIN}\n\n\n\n`;
+      }-*-${dev_mod}-*-${operatorName}-*-${userId}-*-${mc_srl_no}-*-${0}-*-${'Y'}-*-${0}-*-${isUploadedIN}\n\n\n\n\n`;
 
       let payloadFoot = '';
 
@@ -703,7 +703,7 @@ const CreateReceipt = ({navigation, route}) => {
         payloadFoot += `${receiptSettings.footer3} \n`;
       }
       if (receiptSettings.footer4_flag == '1') {
-        payloadFoot += `${receiptSettings.footer4} \n\n\n`;
+        payloadFoot += `${receiptSettings.footer4} \n\n`;
       }
       // await ThermalPrinterModule.printBluetooth({
       //   payload: payload,
@@ -715,7 +715,8 @@ const CreateReceipt = ({navigation, route}) => {
       centerAlignedPrintText(payloadHead, 36);
       leftAlignedPrintText(payload, 24);
       printQRCode(qrCode);
-      centerAlignedPrintText(payloadFoot, 36);
+      centerAlignedPrintText(payloadFoot, 24);
+      centerAlignedPrintText("\n", 24);
 
       console.log('Car Receipt 1');
       navigation.navigate('bottomNavBAr');
@@ -828,7 +829,7 @@ const CreateReceipt = ({navigation, route}) => {
       }
 
       if (receiptSettings.footer2_flag == '1') {
-        payloadFoot += `${receiptSettings.footer2} \n\n\n`;
+        payloadFoot += `${receiptSettings.footer2} \n`;
       }
 
       // await ThermalPrinterModule.printBluetooth({
@@ -840,7 +841,8 @@ const CreateReceipt = ({navigation, route}) => {
       // });
       centerAlignedPrintText(payloadHead, 36);
       leftAlignedPrintText(payload, 24);
-      centerAlignedPrintText(payloadFoot, 36);
+      centerAlignedPrintText(payloadFoot, 24);
+      centerAlignedPrintText("\n", 24);
 
       console.log('OutpassUI 2');
       navigation.navigate('bottomNavBAr');
@@ -908,7 +910,8 @@ const CreateReceipt = ({navigation, route}) => {
 
       centerAlignedPrintText(payloadHead, 36)
       leftAlignedPrintText(payload, 24)
-      centerAlignedPrintText(payloadFoot, 36)
+      centerAlignedPrintText(payloadFoot, 24)
+      centerAlignedPrintText("\n", 24)
       
       console.log('OutpassUI 3');
       navigation.navigate('bottomNavBAr');

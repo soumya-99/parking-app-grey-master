@@ -365,6 +365,7 @@ const ReceiptScreen = ({navigation}) => {
       //   printerWidthMM: 58,
       //   mmFeedPaper: 25,
       // });
+      centerAlignedPrintText("\n", 26)
       console.log('RcptSS 2');
     } catch (err) {
       //error handling
