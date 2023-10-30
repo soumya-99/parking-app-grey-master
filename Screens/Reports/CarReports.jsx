@@ -185,24 +185,26 @@ const CarReports = ({ navigation }) => {
         payload += `FROM: ${mydateFrom.toLocaleDateString("en-GB")}  TO: ${mydateTo.toLocaleDateString("en-GB")}\n`
         payload += `MC.ID: ${imein} \n`
         payload += "--------------------------------\n"
-        payload += "Operator     Qty         Advance      Amount\n "
+        payload += "Operator  Qty  Advance  Amount\n "
         payload += "--------------------------------\n"
         extractedData.forEach(({ vehicleType, quantity, TotalAdvance, totalAmount }) => {
-            const quantityLen = quantity.toString().length
-            const vehicleTypeLen = vehicleType.toString().length
-            const TotalAdvanceLen = TotalAdvance.toString().length
-            payload += `${vehicleType.toString().padEnd(18 - vehicleTypeLen)}${quantity.toString().padEnd(15 - quantityLen)}${TotalAdvance.toString().padEnd(16 - TotalAdvanceLen)}${totalAmount}\n`;
+            // const quantityLen = quantity.toString().length
+            // const vehicleTypeLen = vehicleType.toString().length
+            // const TotalAdvanceLen = TotalAdvance.toString().length
+            // payload += `${vehicleType.toString().padEnd(18 - vehicleTypeLen)}${quantity.toString().padEnd(15 - quantityLen)}${TotalAdvance.toString().padEnd(16 - TotalAdvanceLen)}${totalAmount}\n`;
+
+            payload += `${vehicleType.toString()}      ${quantity.toString()}      ${TotalAdvance.toString()}     ${totalAmount} \n `
         });
         payload += "--------------------------------\n"
-        payload += `TOTAL ${"".padEnd(5)}    ${totalQTY}${"".toString().padEnd(9)} ${totalAdvance.toString().padEnd(13)} ${totalPrice.toString()} \n  `
+        payload += `TOTAL      ${totalQTY}      ${totalAdvance}     ${totalPrice.toString()} \n `
 
         let footerPayload = ""
         if (receiptSettings.footer1_flag == "1") {
-            footerPayload += `${receiptSettings.footer1} \n\n\n`
+            footerPayload += `${receiptSettings.footer1} \n`
         }
 
         if (receiptSettings.footer2_flag == "1") {
-            footerPayload += `${receiptSettings.footer2} \n\n\n`
+            footerPayload += `${receiptSettings.footer2} \n`
         }
 
         const mainPayLoad = addSpecialSpaces(payload)
@@ -226,8 +228,9 @@ const CarReports = ({ navigation }) => {
             //     console.log(msg)
             // })
             centerAlignedPrintText(headerPayload, 36)
-            leftAlignedPrintText(payload, 24)
+            centerAlignedPrintText(payload, 24)
             centerAlignedPrintText(footerPayload, 24)
+            centerAlignedPrintText("\n", 24)
             setpl(false)
             // await handleStoreOrUploadCarOut();
         } catch (err) {

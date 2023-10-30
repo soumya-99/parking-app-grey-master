@@ -5,17 +5,12 @@ import {
   StyleSheet,
   ActivityIndicator,
   PixelRatio,
-  TouchableOpacity,
 } from 'react-native';
 import CustomHeader from '../../component/CustomHeader';
 import storeUsers from '../../Hooks/Sql/User/storeuser';
 import getAuthUser from '../../Hooks/getAuthUser';
 import shiftDatabase from '../../Hooks/Sql/shiftManagement/shiftDatabase';
 import allColor from '../../Resources/Colors/Color';
-import getDatabaseConnection from '../../Hooks/Sql/getDatabaseConnection';
-import { address } from '../../Router/address';
-import axios from 'axios';
-
 
 const UserDetails = ({navigation}) => {
   const [user, setUser] = useState(null);
@@ -38,69 +33,6 @@ const UserDetails = ({navigation}) => {
   useEffect(() => {
     getUserData();
   }, []);
-
-  const uploadFileSerevr = async () => {
-    try {
-      const db = await getDatabaseConnection();
-  
-      return new Promise((resolve, reject) => {
-        db.transaction(
-          (tx) => {
-            tx.executeSql(
-              'SELECT * FROM vehicleInOutTable',[], // Pass the SQL query and arguments to executeSql
-              (_, resultSet) => {
-                const { rows } = resultSet;
-                const data = [];
-                for (let i = 0; i < rows.length; i++) {
-                  data.push(rows.item(i));
-                }
-                resolve(data);
-              },
-              (_, error) => {
-                console.warn("error defetch",error);
-                reject(error);
-              }
-            );
-          },
-          (error) => {
-            console.warn("tx",error);
-            reject(error);
-          }
-        );
-      }).then(async (data) => {
-          // const formData = new FormData();
-          const serverURL = address.uploaddbfile;
-          console.log("Server URL:", serverURL);
-          // // Append the data obtained from the database to the formData
-          // formData.append('databaseData', JSON.stringify(data));
-          console.log("Form Data:", JSON.stringify({data:data}));
-          await axios.post(serverURL, {data:data}, {
-              headers: {
-                'Accept': 'application/json'
-              },
-            })
-            .then((response) => {
-              if (response.status === 200) {
-                console.log("==========================",response.data);
-              } else {
-                console.error('Failed to upload database backup.');
-              }
-            })
-            .catch((error) => {
-              if (error.response) {
-                console.error('Request failed with status code:', error.response.status);
-                console.error('Response data:', error.response.data);
-              } else if (error.request) {
-                console.error('No response received from the server.', error.request);
-              } else {
-                console.error('An error occurred:', error.message);
-              }
-            })        
-      });
-    } catch (error) {
-      console.error('Error during database backup upload:', error);
-    }
-  };
 
   return (
     <>
@@ -216,26 +148,6 @@ const UserDetails = ({navigation}) => {
           </View>
         </View>}
       </View>
-
-      <TouchableOpacity
-        style={{
-          flex: 0.05,
-          backgroundColor: allColor['primary-color'],
-          padding: 10,
-          margin: 10,
-          borderRadius: 12,
-          elevation: 5,
-        }}
-        onPressIn={() => uploadFileSerevr()}>
-        <Text
-          style={{
-            textAlign: 'center',
-            color: allColor.white,
-            fontWeight: 900,
-          }}>
-          Save Data
-        </Text>
-      </TouchableOpacity>
     </>
   );
 };

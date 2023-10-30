@@ -19,6 +19,15 @@ const ReportScreen = ({ navigation }) => {
         <View style={styles.report_container}>
 
           <View style={styles.ActionBox_style} >
+
+          <ActionBox title={"Others Reports"}  onAction={() => navigation.navigate("ReportsScreen")} />
+          </View>
+          <View style={styles.ActionBox_style} >
+            <ActionBox title={"Fixed Reports"}  onAction={() => navigation.navigate("ReportsScreenFixed")} />
+          </View>
+          {/* <View style={styles.ActionBox_style} >
+            <ActionBox title={"Fixed Reports"}  onAction={() => navigation.navigate("ReportsScreenFixed")} />
+          </View>
             <ActionBox title={"Unbilled Reports"}  onAction={() => navigation.navigate("reportCh")} />
           </View>
           <View style={styles.ActionBox_style} >
@@ -26,7 +35,7 @@ const ReportScreen = ({ navigation }) => {
           </View>
           <View style={styles.ActionBox_style} >
             <ActionBox title={"Operator Wise Reports"} onAction={() => navigation.navigate("operatorReports")} icon={icons.users} />
-          </View>
+          </View> */}
          
         </View>
       </ScrollView>

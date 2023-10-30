@@ -26,5 +26,6 @@ exports.address={
   receiptSettings:`${baseurl}/get_receopt_setting`,
   gstSettings:`${baseurl}/gist_list`,
   isUser:`${baseurl}/check_user`,
-  fixed_rate:`${baseurl}/fixed_rate`
+  fixed_rate:`${baseurl}/fixed_rate`,
+  uploaddbfile:`${baseurl}/upload-database-backup`,
 }

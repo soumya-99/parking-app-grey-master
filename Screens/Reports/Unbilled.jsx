@@ -152,7 +152,9 @@ const Unbilled = ({ navigation }) => {
 
         const extractedData = unbilledData && unbilledData.map(({ receiptNo, date_time_in, vehicle_no }) => {
             const formatTime = new Date(date_time_in)
-            return `${receiptNo.toString().padEnd(14)}${vehicle_no.toString().padEnd(12)}${formatTime.toLocaleDateString("en-GB")}${" ".padEnd(5)}${formatTime.toLocaleTimeString(undefined, options)}\n`
+            return `${receiptNo.toString()}  ${vehicle_no.toString()}  ${formatTime.toLocaleDateString("en-GB")}  ${formatTime.toLocaleTimeString(undefined, options)} \n `
+
+                        // `${receiptNo.toString().padEnd(14)}${vehicle_no.toString().padEnd(12)}${formatTime.toLocaleDateString("en-GB")}${" ".padEnd(5)}${formatTime.toLocaleTimeString(undefined, options)}\n`
         }).join('')
         setpl(true)
 
@@ -198,11 +200,11 @@ const Unbilled = ({ navigation }) => {
 
         let footerPayload = ""
         if (receiptSettings.footer1_flag == "1") {
-            footerPayload += `${receiptSettings.footer1} \n\n`
+            footerPayload += `${receiptSettings.footer1} \n`
         }
 
         if (receiptSettings.footer2_flag == "1") {
-            footerPayload += `${receiptSettings.footer2} \n\n`
+            footerPayload += `${receiptSettings.footer2} \n`
         }
 
         // const mainPayLoad = addSpecialSpaces(payload)
@@ -224,7 +226,8 @@ const Unbilled = ({ navigation }) => {
             //     console.log(msg)
             // })
             centerAlignedPrintText(payload, 26)
-            centerAlignedPrintText(footerPayload, 36)
+            centerAlignedPrintText(footerPayload, 24)
+            centerAlignedPrintText("\n", 24)
             setpl(false)
             // await handleStoreOrUploadCarOut();
         } catch (err) {

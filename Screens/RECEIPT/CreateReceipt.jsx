@@ -816,11 +816,11 @@ const CreateReceipt = ({navigation, route}) => {
           `BASE AMOUNT : ${base_amt}\n` +
           `CGST : ${cgst}\n` +
           `SGST : ${sgst}\n` +
-          `PARKING FEES : ${totalPrice}\n\n\n`;
+          `TOTAL FEES : ${totalPrice}\n\n\n`;
       }
 
       if (isGst == 'N') {
-        payload += `PARKING FEES : ${totalPrice}\n\n`;
+        payload += `TOTAL FEES : ${totalPrice}\n\n`;
       }
 
       let payloadFoot = '';

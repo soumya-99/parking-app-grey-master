@@ -151,7 +151,8 @@ const OperatorReport = ({ navigation }) => {
 
         const extractedData = unbilledData && unbilledData.map(({ opratorName, quantity, TotalAdvance, totalAmount }) => {
             // opratorName, quantity, TotalAdvance, totalAmount
-            return `${opratorName?.toString().padEnd(19)}${quantity.toString().padEnd(9)}${TotalAdvance.toString().padEnd(12)}${totalAmount}\n`
+            return `${opratorName.toString()}      ${quantity.toString()}      ${TotalAdvance.toString()}     ${totalAmount} \n `
+            // return `${opratorName?.toString().padEnd(19)}${quantity.toString().padEnd(9)}${TotalAdvance.toString().padEnd(12)}${totalAmount}\n`
         }).join('');
         // console.log("object ", extractedData)
         setpl(true)
@@ -171,16 +172,16 @@ const OperatorReport = ({ navigation }) => {
         //     console.warn(msg)
         // })
 
-        if (pic) {
-            // Printing picture uisng ZCS sdk
-            const picData = pic.split('data:image/jpeg;base64,')
-            // MyModules.printImage(picData[1], (err, msg) => {
-            //     if (err) {
-            //         console.error(err)
-            //     }
-            //     console.log(msg)
-            // })
-        }
+        // if (pic) {
+        //     // Printing picture uisng ZCS sdk
+        //     const picData = pic.split('data:image/jpeg;base64,')
+        //     // MyModules.printImage(picData[1], (err, msg) => {
+        //     //     if (err) {
+        //     //         console.error(err)
+        //     //     }
+        //     //     console.log(msg)
+        //     // })
+        // }
 
         const imein = user?.imei_no
 
@@ -193,16 +194,17 @@ const OperatorReport = ({ navigation }) => {
         payload += "--------------------------------\n"
 
         payload += extractedData
-        payload += `${"TOTAL".padEnd(16)}     ${totalQTY.toString().padEnd(8)} ${totalAdvance.toString().padEnd(11)} ${totalPrice.toString()} \n`
+        
+        payload += `TOTAL      ${totalQTY}      ${totalAdvance}     ${totalPrice.toString()} \n `
 
         let footerPayload = ""
         if (receiptSettings.footer1_flag == "1") {
-            footerPayload += `${receiptSettings.footer1} \n\n\n`
+            footerPayload += `${receiptSettings.footer1} \n`
         }
 
 
         if (receiptSettings.footer2_flag == "1") {
-            footerPayload += `${receiptSettings.footer2} \n\n\n`
+            footerPayload += `${receiptSettings.footer2} \n`
         }
 
         const mainPayLoad = addSpecialSpaces(payload)
@@ -225,6 +227,7 @@ const OperatorReport = ({ navigation }) => {
             centerAlignedPrintText(headerPayload, 36)
             centerAlignedPrintText(payload, 24)
             centerAlignedPrintText(footerPayload, 24)
+            centerAlignedPrintText("\n", 24)
             setpl(false)
             // await handleStoreOrUploadCarOut();
         } catch (err) {

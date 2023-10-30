@@ -15,6 +15,10 @@ import OutpassPrintUI from '../PrintUi/OutpassPrintUI';
 import CarReports from '../Reports/CarReports';
 import OperatorReport from '../Reports/OperatorReport';
 import Unbilled from '../Reports/Unbilled';
+import ReportsScreen from '../Reports/ReportsScreen';
+import ReportsScreenFixed from '../Reports/ReportsScreenFixed';
+import OperatorReportFixed from '../Reports/OperatorReportFixed';
+import CarReportsFixed from '../Reports/CarReportsFixed';
 
 const Stack = createNativeStackNavigator();
 const NavContainer = () => {
@@ -53,8 +57,14 @@ const NavContainer = () => {
             <Stack.Screen name='outpassPrinterPreview' component={OutpassPrintUI}/>
             <Stack.Screen name='reportCh' component={Unbilled}/>
 
+            <Stack.Screen name='ReportsScreen' component={ReportsScreen}/>
+            <Stack.Screen name='ReportsScreenFixed' component={ReportsScreenFixed}/>
+
             <Stack.Screen name='carReports' component={CarReports}/>
             <Stack.Screen name='operatorReports' component={OperatorReport}/>
+
+            <Stack.Screen name='OperatorReportFixed' component={OperatorReportFixed}/>
+            <Stack.Screen name='CarReportsFixed' component={CarReportsFixed}/>
 
           </Stack.Navigator>
 

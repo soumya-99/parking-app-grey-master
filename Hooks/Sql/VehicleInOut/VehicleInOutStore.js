@@ -625,6 +625,39 @@ function VehicleInOutStore() {
     });
   }
 
+  const getVehicleWiseFixedReports = async (fromDate, toDate) => {
+    const db = await getDatabaseConnection()
+
+    const currentDate = new Date(fromDate); // Get current date in local timezone
+    const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()); // Set start date to midnight (00:00 AM) of the current date
+
+    const endDate2 = new Date(toDate);
+    const endDateStart = new Date(endDate2.getFullYear(), endDate2.getMonth(), endDate2.getDate());
+    const endDate = new Date(endDateStart.getTime() + 24 * 60 * 60 * 1000 - 1); // Set end date to 11:59 PM of the current date
+
+    console.log(startDate, "------------------unbilled Time----------------", endDate)
+    return new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        tx.executeSql(
+          'SELECT vehicleType, COUNT(*) AS quantity, SUM(paid_amt) AS totalAmount, SUM(advance) AS TotalAdvance FROM vehicleInOutTable WHERE  date_time_in >= ? AND date_time_in <= ? GROUP BY vehicleType',
+          // 'SELECT vehicleType, COUNT(*) AS quantity, SUM(paid_amt) AS totalAmount, SUM(advance) AS TotalAdvance FROM vehicleInOutTable WHERE date_time_out IS NOT NULL AND date_time_out >= ? AND date_time_out <= ? GROUP BY vehicleType',
+          [startDate.toISOString(), endDate.toISOString()],
+          (_, resultSet) => {
+            const records = [];
+            for (let i = 0; i < resultSet.rows.length; i++) {
+              const record = resultSet.rows.item(i);
+              records.push(record);
+            }
+            resolve(records);
+          },
+          (_, error) => {
+            reject(error); // Error occurred during the query
+          }
+        );
+      });
+    });
+  }
+
   const getOperatorWiseReports = async (fromDate, toDate) => {
     const db = await getDatabaseConnection()
 
@@ -640,15 +673,52 @@ function VehicleInOutStore() {
       db.transaction(tx => {
         tx.executeSql(
           // 'SELECT * FROM vehicleInOutTable',
+          // 'SELECT opratorName, COUNT(*) AS quantity, SUM(paid_amt) AS totalAmount, SUM(advance) AS TotalAdvance FROM vehicleInOutTable WHERE date_time_out IS NOT NULL AND date_time_out >= ? AND date_time_out <= ? GROUP BY opratorName',
           'SELECT opratorName, COUNT(*) AS quantity, SUM(paid_amt) AS totalAmount, SUM(advance) AS TotalAdvance FROM vehicleInOutTable WHERE date_time_out IS NOT NULL AND date_time_out >= ? AND date_time_out <= ? GROUP BY opratorName',
           [startDate.toISOString(), endDate.toISOString()],
           (_, resultSet) => {
-            console.log("+================+ OPERATORWISE RECORDDDD +================", resultSet.rows)
             const records = [];
             for (let i = 0; i < resultSet.rows.length; i++) {
               const record = resultSet.rows.item(i);
               records.push(record);
             }
+            console.log("+================+ OPERATORWISE RECORDDDD +================", records)
+            resolve(records);
+          },
+          (_, error) => {
+            reject(error); // Error occurred during the query
+          }
+        );
+      });
+    });
+  }
+
+
+  const getOperatorWiseFixedReports = async (fromDate, toDate) => {
+    const db = await getDatabaseConnection()
+
+    const currentDate = new Date(fromDate); // Get current date in local timezone
+    const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()); // Set start date to midnight (00:00 AM) of the current date
+
+    const endDate2 = new Date(toDate);
+    const endDateStart = new Date(endDate2.getFullYear(), endDate2.getMonth(), endDate2.getDate());
+    const endDate = new Date(endDateStart.getTime() + 24 * 60 * 60 * 1000 - 1); // Set end date to 11:59 PM of the current date
+
+    console.log(startDate, "------------------unbilled Time----------------", endDate)
+    return new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        tx.executeSql(
+          'SELECT opratorName, COUNT(*) AS quantity, SUM(paid_amt) AS totalAmount, SUM(advance) AS TotalAdvance FROM vehicleInOutTable WHERE date_time_in >= ? AND date_time_in <= ? GROUP BY opratorName',
+          // 'SELECT * FROM vehicleInOutTable WHERE date_time_out IS NULL AND  oprn_mode <> "F" AND date_time_in >= ? AND date_time_in <= ?',
+          // 'SELECT opratorName, COUNT(*) AS quantity, SUM(paid_amt) AS totalAmount, SUM(advance) AS TotalAdvance FROM vehicleInOutTable WHERE date_time_out IS NOT NULL AND date_time_out >= ? AND date_time_out <= ? GROUP BY opratorName',
+          [startDate.toISOString(), endDate.toISOString()],
+          (_, resultSet) => {
+            const records = [];
+            for (let i = 0; i < resultSet.rows.length; i++) {
+              const record = resultSet.rows.item(i);
+              records.push(record);
+            }
+            console.log("+================+ OPERATORWISE RECORDDDD +================", records)
             resolve(records);
           },
           (_, error) => {
@@ -807,7 +877,9 @@ function VehicleInOutStore() {
     updateIsUploadedINById, updateIsUploadedOUTById,
     getAllUnbilledRecords,
     getVehicleWiseReports,
+    getVehicleWiseFixedReports,
     getOperatorWiseReports,
+    getOperatorWiseFixedReports,
     handleCheckIsVehicleOut,
     getAllInVehiclesPastMonth,
     getAllOutVehiclesPastMonth,
