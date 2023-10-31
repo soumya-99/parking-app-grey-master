@@ -365,11 +365,11 @@ const OutpassPrintUI = ({route, navigation}) => {
       });
 
       if (receiptSettings.footer1_flag == '1') {
-        payloadFoot += ` ${receiptSettings.footer1} \n\n\n`;
+        payloadFoot += ` ${receiptSettings.footer1} \n`;
       }
 
       if (receiptSettings.footer2_flag == '1') {
-        payloadFoot += `${receiptSettings.footer2} \n\n\n`;
+        payloadFoot += `${receiptSettings.footer2} \n`;
       }
       // this function start the printing
       // this is an external package
@@ -385,6 +385,7 @@ const OutpassPrintUI = ({route, navigation}) => {
       centerAlignedPrintText(payloadHead, 36);
       leftAlignedPrintText(payload, 24);
       centerAlignedPrintText(payloadFoot, 24);
+      centerAlignedPrintText("\n", 24);
       console.log('OutpassUI 2');
 
       // await handleStoreOrUploadCarOut();
