@@ -15,7 +15,7 @@ import BleManager from 'react-native-ble-manager';
 import getReceiptSettings from '../../Hooks/Controller/ReceiptSetting/getReceiptSettings';
 import ReceiptImageStorage from '../../Hooks/Sql/Receipt Setting Storage/ReceiptImageStorage';
 
-const OutpassPrintUI = ({ route, navigation }) => {
+const OutpassedDoneUI = ({ route, navigation }) => {
   // Extract data and others from the route params  
   const { data, others, gstSettings, isAvailableYet } = route.params;
   // const { data, others, gstSettings } = route.params;
@@ -463,8 +463,13 @@ const OutpassPrintUI = ({ route, navigation }) => {
                 handlePrintReceipt();
               }}
               style={{ flex: 1, marginLeft: PixelRatio.roundToNearestPixel(8) }}
-              // disabled={isAvailableYet ? true : false}
+              disabled={isAvailableYet ? true : false}
             />
+          </View>
+          <View>
+            <Text style={{color: "red"}}>
+                Outpassed done. You can not print this data again.
+            </Text>
           </View>
         </View>
       </ScrollView>
@@ -472,7 +477,7 @@ const OutpassPrintUI = ({ route, navigation }) => {
   );
 };
 
-export default OutpassPrintUI;
+export default OutpassedDoneUI;
 
 const styles = StyleSheet.create({
   inLineTextContainer: {

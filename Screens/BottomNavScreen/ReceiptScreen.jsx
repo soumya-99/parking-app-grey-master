@@ -51,11 +51,13 @@ import fixedPriceStorage from '../../Hooks/Sql/FixedPriceStore/fixedPriceStorage
 import dummyData from './dummy_in_data.json';
 import uploadVehicleData from '../../Hooks/Controller/vechicles/uploadVehicleData';
 const ReceiptScreen = ({navigation}) => {
+
   const MyNativeModule = NativeModules.MyPrinter;
 
   const isOnline = useContext(InternetStatusContext);
   const isFoccused = useIsFocused();
   const {generalSetting, logOut} = useContext(AuthContext);
+let { dev_mod } = generalSetting
 
   const [vechicles, setVechicles] = useState();
   // GST SETTINGS
@@ -419,8 +421,9 @@ const ReceiptScreen = ({navigation}) => {
 
   useEffect(() => {
     if (isFoccused) {
+      
       // totalAmount": 0, "vehicleInCount": 30169, "vehicleOutCount":
-      calculateStatistics() .then(res => {
+      calculateStatistics(dev_mod) .then(res => {
        console.log("-----------------------------------------------",res)
        setTotalAmount(Math.round(res.totalAmount * 100) / 100);
        setTotalVehicleIn(res.vehicleInCount)

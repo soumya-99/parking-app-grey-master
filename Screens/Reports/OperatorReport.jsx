@@ -159,6 +159,12 @@ const OperatorReport = ({ navigation }) => {
         if (receiptSettings.header2_flag == "1") {
             headerPayload += `${receiptSettings.header2}\n`
         }
+        if (receiptSettings.header3_flag == "1") {
+            headerPayload += `${receiptSettings.header3}\n`
+        }
+        if (receiptSettings.header4_flag == "1") {
+            headerPayload += `${receiptSettings.header4}\n`
+        }
         // Printing Header uisng ZCS sdk
 
         MyModules.printHeader(headerPayload, 24, (err, msg) => {
@@ -199,7 +205,15 @@ const OperatorReport = ({ navigation }) => {
 
 
         if (receiptSettings.footer2_flag == "1") {
-            footerPayload += `${receiptSettings.footer2} \n\n\n\n`
+            footerPayload += `${receiptSettings.footer2} \n`
+        }
+        if (receiptSettings.footer3_flag == "1") {
+            footerPayload += `${receiptSettings.footer3} \n`
+        }
+
+
+        if (receiptSettings.footer4_flag == "1") {
+            footerPayload += `${receiptSettings.footer4} \n\n\n`
         }
 
         const mainPayLoad = addSpecialSpaces(payload)

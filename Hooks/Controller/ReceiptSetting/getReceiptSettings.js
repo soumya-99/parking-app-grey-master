@@ -9,7 +9,7 @@ function getReceiptSettings() {
     const isOnline = useContext(InternetStatusContext)
     const { addNewReceiptSetting, getAllReceiptSetting, } = ReceiptSettingStorage()
     const { retrieveAuthUser } = getAuthUser()
-    const [receiptSettings, setReceiptSettings] = useState("hello")
+    const [receiptSettings, setReceiptSettings] = useState("")
 
     const handleGetReceiptSettings = async () => {
         const token = await retrieveAuthUser()
@@ -18,7 +18,7 @@ function getReceiptSettings() {
         }
         if (!isOnline) {
             getAllReceiptSetting().then(res => {
-                // console.log("offline receipt settings ", res)
+                console.log("offline receipt settings ", res)
                 setReceiptSettings(res[0])
             }).catch(error => {
                 console.error(error)
@@ -39,7 +39,7 @@ function getReceiptSettings() {
             addNewReceiptSetting(header1, header2, header3, header4, footer1, footer2, footer3, footer4, header1_flag, header2_flag, header3_flag, header4_flag, footer1_flag, footer2_flag, footer3_flag, footer4_flag, image_flag).then((res) => {
                 console.log(res)
                 getAllReceiptSetting().then(res => {
-                    // console.log("offline receipt settings ", res)
+                    console.log("offline receipt settings ", res)
                     setReceiptSettings(res[0])
                 }).catch(error => {
                     console.error(error)

@@ -112,17 +112,23 @@ const Scanner = ({ navigation }) => {
       result.date_time_in,
     );
 
-    if (isAvailable) {
-      console.log('--------- is available ----------', isAvailable);
-      ToastAndroid.showWithGravity(
-        'payment collected',
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER,
-      );
-      navigation.navigate('bottomNavBAr');
+    // if (isAvailable) {
+    //   // console.log('--------- is available ----------', isAvailable);
+    //   // ToastAndroid.showWithGravity(
+    //   //   'payment collected',
+    //   //   ToastAndroid.SHORT,
+    //   //   ToastAndroid.CENTER,
+    //   // );
+    //   // console.log("SCANNER AVAILABE +===== +++ ===++", isAvailable)
+    //   // navigation.navigate('bottomNavBAr');
+    //   navigation.navigate('outpassedDone', {
+    //     data: vData,
+    //     others: result,
+    //     isAvailableYet: isAvailable
+    //   });
 
-      return;
-    }
+    //   return;
+    // }
 
     // newVData = newVData.map(item => item);
 
@@ -245,10 +251,20 @@ const Scanner = ({ navigation }) => {
       value: totalDuration,
     });
 
-    navigation.navigate('outpassPrinterPreview', {
-      data: vData,
-      others: result,
-    });
+    if (isAvailable) {
+      console.log("SCANNER AVAILABE +===== +++ ===++", isAvailable)
+      navigation.navigate('outpassedDone', {
+        data: vData,
+        others: result,
+        isAvailableYet: isAvailable
+      });
+      return;
+    } else {
+      navigation.navigate('outpassPrinterPreview', {
+        data: vData,
+        others: result,
+      });
+    }
   };
 
   const startScanning = () => {

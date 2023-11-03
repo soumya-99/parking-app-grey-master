@@ -12,6 +12,7 @@ import {AuthContext} from '../../Auth/AuthProvider';
 import Scanner from '../../component/Scanner';
 import PrintUi from '../PrintUi/PrintUi';
 import OutpassPrintUI from '../PrintUi/OutpassPrintUI';
+import OutpassedDoneUI from '../PrintUi/OutpassedDoneUI';
 import CarReports from '../Reports/CarReports';
 import OperatorReport from '../Reports/OperatorReport';
 import Unbilled from '../Reports/Unbilled';
@@ -51,6 +52,7 @@ const NavContainer = () => {
             <Stack.Screen name="scanner" component={Scanner} />
             <Stack.Screen name='printerPreview' component={PrintUi}/>
             <Stack.Screen name='outpassPrinterPreview' component={OutpassPrintUI}/>
+            <Stack.Screen name='outpassedDone' component={OutpassedDoneUI}/>
             <Stack.Screen name='reportCh' component={Unbilled}/>
 
             <Stack.Screen name='carReports' component={CarReports}/>

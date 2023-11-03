@@ -1,4 +1,4 @@
-import { PixelRatio, Pressable, StyleSheet, Text, View, ScrollView, Dimensions, ActivityIndicator, Alert, NativeModules,ToastAndroid ,PermissionsAndroid} from 'react-native'
+import { PixelRatio, Pressable, StyleSheet, Text, View, ScrollView, Dimensions, ActivityIndicator, Alert, NativeModules, ToastAndroid, PermissionsAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios'
@@ -18,7 +18,7 @@ import ReceiptImageStorage from '../../Hooks/Sql/Receipt Setting Storage/Receipt
 import VehicleInOutStore from '../../Hooks/Sql/VehicleInOut/VehicleInOutStore';
 import storeUsers from '../../Hooks/Sql/User/storeuser';
 
-const CarReports = ({ navigation }) => {
+const CarReportsFixed = ({ navigation }) => {
     // NativeModules.MyPrinter is a reference to a native module named MyPrinter.   
     const MyModules = NativeModules.MyPrinter;
     const { retrieveAuthUser } = getAuthUser()
@@ -56,39 +56,39 @@ const CarReports = ({ navigation }) => {
 
     async function checkBluetoothEnabled() {
         try {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-            {
-              title: 'Bluetooth Permission',
-              message: 'This app needs access to your location to check Bluetooth status.',
-              buttonNeutral: 'Ask Me Later',
-              buttonNegative: 'Cancel',
-              buttonPositive: 'OK',
-            },
-          );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            // Permission granted, check Bluetooth status
-            BleManager.enableBluetooth()
-              .then(() => {
-                // Success code
-                setIsBlueToothEnable(true)
-                console.log("The bluetooth is already enabled or the user confirm");
-              })
-              .catch((error) => {
-                // Failure code
-                console.log("The user refuse to enable bluetooth");
-              });
-            // const isEnabled = await BluetoothStatus.isEnabled();
-            // console.log('Bluetooth Enabled:', isEnabled);
-          } else {
-            // if bluetooth is not enabled call this functions it`s self.
-            checkBluetoothEnabled()
-            console.log('Bluetooth permission denied');
-          }
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                {
+                    title: 'Bluetooth Permission',
+                    message: 'This app needs access to your location to check Bluetooth status.',
+                    buttonNeutral: 'Ask Me Later',
+                    buttonNegative: 'Cancel',
+                    buttonPositive: 'OK',
+                },
+            );
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                // Permission granted, check Bluetooth status
+                BleManager.enableBluetooth()
+                    .then(() => {
+                        // Success code
+                        setIsBlueToothEnable(true)
+                        console.log("The bluetooth is already enabled or the user confirm");
+                    })
+                    .catch((error) => {
+                        // Failure code
+                        console.log("The user refuse to enable bluetooth");
+                    });
+                // const isEnabled = await BluetoothStatus.isEnabled();
+                // console.log('Bluetooth Enabled:', isEnabled);
+            } else {
+                // if bluetooth is not enabled call this functions it`s self.
+                checkBluetoothEnabled()
+                console.log('Bluetooth permission denied');
+            }
         } catch (error) {
-          console.log('Error checking Bluetooth status:', error);
+            console.log('Error checking Bluetooth status:', error);
         }
-      }
+    }
 
     // handle change From date
     const changeSelectedDateFrom = (event, selectedDate) => {
@@ -139,17 +139,17 @@ const CarReports = ({ navigation }) => {
         if (pl) {
             return
         };
-         // store return data into token variable
-         const token = await retrieveAuthUser();
-         // store return data into user variable
-         const user = await getUserByToken(token);
+        // store return data into token variable
+        const token = await retrieveAuthUser();
+        // store return data into user variable
+        const user = await getUserByToken(token);
 
         [{ "TotalAdvance": 0, "opratorName": "Amit Mondal", "quantity": 2, "totalAmount": 160 }]
         const extractedData = unbilledData && unbilledData.map(({ vehicleType, quantity, TotalAdvance, totalAmount }) => ({
             vehicleType, quantity, TotalAdvance, totalAmount
         }));
         setpl(true)
-        let headerPayload = 'VEHICLES RECEIPT\n'
+        let headerPayload = 'VEHICLE WISE REOPRT\n'
         if (receiptSettings.header1_flag == "1") {
             headerPayload += `${receiptSettings.header1}\n`
         }
@@ -188,13 +188,17 @@ const CarReports = ({ navigation }) => {
         payload += `FROM: ${mydateFrom.toLocaleDateString("en-GB")}  TO: ${mydateTo.toLocaleDateString("en-GB")}\n`
         payload += `MC.ID: ${imein} \n`
         payload += "--------------------------------------------------------------------------\n"
-        payload += "Operator     Qty         Advance      Amount\n "
+        payload += "Vehicle     Qty         Advance      Amount\n "
         payload += "--------------------------------------------------------------------\n"
         extractedData.forEach(({ vehicleType, quantity, TotalAdvance, totalAmount }) => {
             const quantityLen = quantity.toString().length
             const vehicleTypeLen = vehicleType.toString().length
             const TotalAdvanceLen = TotalAdvance.toString().length
-            payload += `${vehicleType.toString().padEnd(18 - vehicleTypeLen)}${quantity.toString().padEnd(15 - quantityLen)}${TotalAdvance.toString().padEnd(16 - TotalAdvanceLen)}${totalAmount}\n`;
+
+            // payload += abc(vehicleType, quantity, TotalAdvance, totalAmount)
+
+
+            payload += `${vehicleType.toString().substr(0, 6).padEnd(6 - vehicleType.toString().substr(0, 6).length + 12)}${quantity.toString().padEnd(19 - quantityLen)}${TotalAdvance.toString().padEnd(12 - TotalAdvanceLen)}${totalAmount}\n`;
         });
         payload += "--------------------------------------------------------------------\n"
         payload += `TOTAL ${"".padEnd(5)}    ${totalQTY}${"".toString().padEnd(9)} ${totalAdvance.toString().padEnd(13)} ${totalPrice.toString()} \n  `
@@ -205,14 +209,14 @@ const CarReports = ({ navigation }) => {
         }
 
         if (receiptSettings.footer2_flag == "1") {
-            footerPayload += `${receiptSettings.footer2} \n`
+            footerPayload += `${receiptSettings.footer2} \n\n`
         }
         if (receiptSettings.footer3_flag == "1") {
             footerPayload += `${receiptSettings.footer3} \n`
         }
 
         if (receiptSettings.footer4_flag == "1") {
-            footerPayload += `${receiptSettings.footer4} \n\n\n`
+            footerPayload += `${receiptSettings.footer4} \n\n`
         }
 
         const mainPayLoad = addSpecialSpaces(payload)
@@ -246,15 +250,38 @@ const CarReports = ({ navigation }) => {
         }
     }
 
+    function abc(vehicleType, quantity, TotalAdvance, totalAmount) {
+
+        const vehicleTypeLength = 5;
+    const quantityLength = 5;
+    const TotalAdvanceLength = 5;
+    const totalAmountLength = 5; // Change the totalAmountLength to 15
+
+    const paddedVehicleType = vehicleType.toString().substring(0, vehicleTypeLength);
+    const paddedQuantity = quantity.toString().padStart(quantityLength, ' ');
+    const paddedTotalAdvance = TotalAdvance.toString().padStart(TotalAdvanceLength, ' ');
+
+    const formattedTotalAmount = totalAmount.toString().padEnd(totalAmountLength, ' ');
+
+    const formattedString = `${paddedVehicleType}${paddedQuantity}${paddedTotalAdvance}${formattedTotalAmount}\n`;
+
+    let payload = '';
+    payload += formattedString;
+
+    console.log(payload);
+    return payload;
+    }
+
+
     // getVehicleWiseReports() return list of vihicle
-    const { getVehicleWiseReports } = VehicleInOutStore()
+    const { getVehicleWiseFixedReports } = VehicleInOutStore()
     const [showGenerate, setShowGenerate] = useState(false)
     const [value, setValue] = useState(0)
 
     async function handleGenerateReport() {
         // Vehicle wise reports data Error---------------- [{"quantity": 1, "totalAmount": 40, "vehicleType": "Car"}, {"quantity": 1, "totalAmount": 50, "vehicleType": "bus"}]
         setLoading(true)
-        getVehicleWiseReports(mydateFrom.toISOString(), mydateTo.toISOString()).then(res => {
+        getVehicleWiseFixedReports(mydateFrom.toISOString(), mydateTo.toISOString()).then(res => {
             console.log("------------------Vehicle wise reports data Error----------------", res)
             setUnbilledData(res)
             const totalAmount = res.reduce((sum, obj) => {
@@ -302,7 +329,7 @@ const CarReports = ({ navigation }) => {
     return (
         <View style={{ flex: 1 }}>
             {/* render custom Header */}
-            <CustomHeader title={"Vehicle Wise Reports"} navigation={navigation} />
+            <CustomHeader title={"Vehicle Wise Fixed Reports"} navigation={navigation} />
             {/* render from date picker */}
             {isDisplayDateFrom && <DateTimePicker
                 testID="dateTimePicker"
@@ -417,7 +444,7 @@ const CarReports = ({ navigation }) => {
     )
 }
 
-export default CarReports
+export default CarReportsFixed
 
 const styles = StyleSheet.create({
     select_date_header: {

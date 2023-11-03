@@ -602,18 +602,19 @@ const CreateReceipt = ({navigation, route}) => {
       if (pic) {
         payload += `[R]<img>${pic}</img>\n\n` + '\n';
       }
+      console.log("RECEPIT SETTINGS ==========+++++++?>>>>>>", receiptSettings)
       if (receiptSettings.header1_flag == '1') {
         payload += `[C]<font size='tall'> ${receiptSettings.header1}</font>\n`;
       }
       if (receiptSettings.header2_flag == '1') {
-        payload += `[c]${receiptSettings.header2}\n`;
+        payload += `[c]<font size='tall'> ${receiptSettings.header2}</font>\n`;
       }
 
       if (receiptSettings.header3_flag == '1') {
         payload += `[C]<font size='tall'> ${receiptSettings.header3}</font>\n`;
       }
       if (receiptSettings.header4_flag == '1') {
-        payload += `[c]${receiptSettings.header4}\n`;
+        payload += `[c]<font size='tall'> ${receiptSettings.header4}</font>\n`;
       }
       payload +=
         `[C]<B><font size='big'>---------------</font>\n` +
@@ -636,7 +637,7 @@ const CreateReceipt = ({navigation, route}) => {
         payload += `[C] ${receiptSettings.footer3} \n`;
       }
       if (receiptSettings.footer4_flag == '1') {
-        payload += `[C]${receiptSettings.footer4} \n`;
+        payload += `[C] ${receiptSettings.footer4} \n`;
       }
       await ThermalPrinterModule.printBluetooth({
         payload: payload,
@@ -651,7 +652,7 @@ const CreateReceipt = ({navigation, route}) => {
       //
       // alert(JSON.stringify(err.message))
       ToastAndroid.show('Print error', ToastAndroid.SHORT);
-      console.log(err.message);
+      console.log("lullllluuuuuuullluulluullu",err.message);
     }
   };
 
@@ -671,11 +672,18 @@ const CreateReceipt = ({navigation, route}) => {
       if (pic) {
         payload += `[R]<img>${pic}</img>\n\n` + '\n';
       }
+      console.log("+++++++dipsujilufsadlfyhsuify+++++++", receiptSettings)
       if (receiptSettings.header1_flag == '1') {
         payload += `[C]<font size='tall'> ${receiptSettings.header1}</font>\n`;
       }
       if (receiptSettings.header2_flag == '1') {
         payload += `[c]${receiptSettings.header2}\n`;
+      }
+      if (receiptSettings.header3_flag == '1') {
+        payload += `[C]<font size='tall'> ${receiptSettings.header3}</font>\n`;
+      }
+      if (receiptSettings.header4_flag == '1') {
+        payload += `[c]<font size='tall'> ${receiptSettings.header4}</font>\n`;
       }
       payload +=
         `[C]<B><font size='big'>---------------</font>\n` +
@@ -689,11 +697,11 @@ const CreateReceipt = ({navigation, route}) => {
           `[L]<b>BASE AMOUNT : ${base_amt}\n` +
           `[L]<b>CGST : ${cgst}\n` +
           `[L]<b>SGST : ${sgst}\n` +
-          `[L]<b>PARKING FEES : ${totalPrice}\n\n`;
+          `[L]<b>TOTAL FEES : ${totalPrice}\n\n`;
       }
 
       if (isGst == 'N') {
-        payload += `[L]<b>PARKING FEES : ${totalPrice}\n\n`;
+        payload += `[L]<b>TOTAL FEES : ${totalPrice}\n\n`;
       }
 
       if (receiptSettings.footer1_flag == '1') {
@@ -702,6 +710,13 @@ const CreateReceipt = ({navigation, route}) => {
 
       if (receiptSettings.footer2_flag == '1') {
         payload += `[C]${receiptSettings.footer2} \n`;
+      }
+      if (receiptSettings.footer3_flag == '1') {
+        payload += `[C] ${receiptSettings.footer3} \n`;
+      }
+
+      if (receiptSettings.footer4_flag == '1') {
+        payload += `[C] ${receiptSettings.footer4} \n\n\n`;
       }
 
       await ThermalPrinterModule.printBluetooth({
@@ -737,13 +752,13 @@ const CreateReceipt = ({navigation, route}) => {
         payload += `[C]<font size='tall'> ${receiptSettings.header1}</font>\n`
       }
       if (receiptSettings.header2_flag == '1') {
-        payload += `[c]${receiptSettings.header2}\n`
+        payload += `[c]<font size='tall'> ${receiptSettings.header2}</font>\n`
       }
       if (receiptSettings.header3_flag == '1') {
-        payload += `[c]${receiptSettings.header3}\n`
+        payload += `[c]<font size='tall'> ${receiptSettings.header3}</font>\n`
       }
       if (receiptSettings.header4_flag == '1') {
-        payload += `[c]${receiptSettings.header4}\n`
+        payload += `[c]<font size='tall'> ${receiptSettings.header4}</font>\n`
       }
 
       payload +=
@@ -762,7 +777,7 @@ const CreateReceipt = ({navigation, route}) => {
       }
 
       if (receiptSettings.footer2_flag == '1') {
-        payload += `[C]${receiptSettings.footer2} \n`
+        payload += `[C] ${receiptSettings.footer2} \n`
       }
 
       if (receiptSettings.footer3_flag == '1') {
@@ -770,7 +785,7 @@ const CreateReceipt = ({navigation, route}) => {
       }
 
       if (receiptSettings.footer4_flag == '1') {
-        payload += `[C]${receiptSettings.footer4} \n`
+        payload += `[C]${receiptSettings.footer4} \n\n\n`
       }
       await ThermalPrinterModule.printBluetooth({
         payload: payload,

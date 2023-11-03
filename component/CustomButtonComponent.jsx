@@ -11,9 +11,9 @@ const CancelButton = ({ title,onAction,style }) => {
     );
 };
 
-const GoButton = ({ title,onAction,style }) => {
+const GoButton = ({ title,onAction,style, disabled=false }) => {
     return (
-        <TouchableOpacity style={[styles.button,styles.changePasswordButton,style]} onPress={onAction}  >
+        <TouchableOpacity style={[styles.button,styles.changePasswordButton,style]} onPress={onAction} disabled={disabled} >
             <Text style={{...styles.textStyle,color:allColor.white}}>{title}</Text>
         </TouchableOpacity>
     );

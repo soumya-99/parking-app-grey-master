@@ -4,7 +4,12 @@ import getDatabaseConnection from '../getDatabaseConnection'
 function ReceiptSettingStorage() {
     async function createReceiptSettingStorageTable() {
         const db = await getDatabaseConnection()
-
+        db.transaction(tx => {
+            tx.executeSql(
+                "DROP TABLE IF EXISTS receiptSettingTable",
+                []
+            )
+        })
         db.transaction(tx => {
             tx.executeSql(
                 'CREATE TABLE IF NOT EXISTS receiptSettingTable (id INTEGER PRIMARY KEY AUTOINCREMENT,header1 Text, header2 Text,header3 Text, header4 Text,footer1 Text,footer2 Text,footer3 Text,footer4 Text,image Text,header1_flag TEXT,header2_flag TEXT,header3_flag TEXT,header4_flag TEXT,footer1_flag TEXT, footer2_flag TEXT,footer3_flag TEXT, footer4_flag TEXT,image_flag TEXT)',
