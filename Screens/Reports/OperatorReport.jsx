@@ -213,7 +213,7 @@ const OperatorReport = ({ navigation }) => {
 
 
         if (receiptSettings.footer4_flag == "1") {
-            footerPayload += `${receiptSettings.footer4} \n\n\n`
+            footerPayload += `${receiptSettings.footer4} \n`
         }
 
         const mainPayLoad = addSpecialSpaces(payload)
@@ -228,6 +228,12 @@ const OperatorReport = ({ navigation }) => {
             })
             // Printing footer uisng ZCS sdk
             MyModules.printFooter(footerPayload, 20, (err, msg) => {
+                if (err) {
+                    console.error(err)
+                }
+                console.log(msg)
+            })
+            MyModules.printFooter("\n", 20, (err, msg) => {
                 if (err) {
                     console.error(err)
                 }

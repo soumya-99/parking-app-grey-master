@@ -209,14 +209,14 @@ const CarReportsFixed = ({ navigation }) => {
         }
 
         if (receiptSettings.footer2_flag == "1") {
-            footerPayload += `${receiptSettings.footer2} \n\n`
+            footerPayload += `${receiptSettings.footer2} \n`
         }
         if (receiptSettings.footer3_flag == "1") {
             footerPayload += `${receiptSettings.footer3} \n`
         }
 
         if (receiptSettings.footer4_flag == "1") {
-            footerPayload += `${receiptSettings.footer4} \n\n`
+            footerPayload += `${receiptSettings.footer4} \n`
         }
 
         const mainPayLoad = addSpecialSpaces(payload)
@@ -234,6 +234,12 @@ const CarReportsFixed = ({ navigation }) => {
             // Printing footer uisng ZCS sdk
 
             MyModules.printFooter(footerPayload, 20, (err, msg) => {
+                if (err) {
+                    console.error(err)
+                }
+                console.log(msg)
+            })
+            MyModules.printFooter("\n", 20, (err, msg) => {
                 if (err) {
                     console.error(err)
                 }
