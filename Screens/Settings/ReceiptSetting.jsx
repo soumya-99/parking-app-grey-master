@@ -64,7 +64,7 @@ const ReceiptSetting = ({ navigation }) => {
         }).catch(error => {
             console.error(error)
         })
-    }, [update])
+    }, [])
 
     return (
         <View style={{ flex: 1, }}>

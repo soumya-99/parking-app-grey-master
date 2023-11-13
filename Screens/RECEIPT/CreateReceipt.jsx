@@ -674,7 +674,8 @@ const CreateReceipt = ({navigation, route}) => {
       }
       console.log("+++++++dipsujilufsadlfyhsuify+++++++", receiptSettings)
       if (receiptSettings.header1_flag == '1') {
-        payload += `[C]${receiptSettings.header1}</font>\n`;
+        console.log("XXDDDDFFFFFSSSHHHEYY==========sSDAWRTY", receiptSettings)
+        payload += `[C]${receiptSettings.header1}\n`;
       }
       if (receiptSettings.header2_flag == '1') {
         payload += `[C]${receiptSettings.header2}\n`;

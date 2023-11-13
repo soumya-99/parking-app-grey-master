@@ -1,9 +1,9 @@
-const baseurl = 'https://parking.opentech4u.co.in/api/parking'
-// const baseurl = 'http://192.168.1.8/sss/parking/api/parking'
+// const baseurl = 'https://parking.opentech4u.co.in/api/parking'
+const baseurl = 'http://192.168.1.8/sss/parking/api/parking'
 // const baseurl = 'http://192.168.1.218/sss/powercraft/api/parking'
 
-const baseurl2 = 'https://parking.opentech4u.co.in/api'
-// const baseurl2 = 'http://192.168.1.8/sss/parking/api'
+// const baseurl2 = 'https://parking.opentech4u.co.in/api'
+const baseurl2 = 'http://192.168.1.8/sss/parking/api'
 
 exports.address={
   login:`${baseurl}/login`,
